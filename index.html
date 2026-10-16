@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ángel Alejandro Arce | Martillero Judicial y Público - Corrientes (Mat. S.T.J. Nº 383)</title>
+  <meta name="description" content="Ángel Alejandro Arce - Martillero Judicial y Público en la Provincia de Corrientes (Matrícula S.T.J. Ctes. Nº 383). Remates judiciales, subastas públicas, tasaciones oficiales y operaciones inmobiliarias." />
+  <meta name="keywords" content="Angel Alejandro Arce, Martillero Judicial Corrientes, Remates Judiciales Corrientes, Subastas, Tasaciones, Matricula 383, Colegio de Martilleros Corrientes" />
+
+  <!-- Google Fonts: Rubik (igual que sitio de referencia armandovallejos.com.ar) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome 6.5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+  <!-- Leaflet 1.9.4 CSS (igual que sitio de referencia) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Barra Superior Institucional -->
+  <div class="contact-bar no-print">
+    <div class="container">
+      <div class="row align-items-center gy-1">
+        <div class="col-lg-5 text-center text-lg-start">
+          <span class="badge-matricula me-2">
+            <i class="fa-solid fa-scale-balanced me-1"></i>Matrícula S.T.J. Ctes. Nº 383
+          </span>
+          <span class="small d-none d-sm-inline text-white-50">Auxiliar de la Justicia • Provincia de Corrientes</span>
+        </div>
+        <div class="col-lg-7 text-center text-lg-end">
+          <a href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20le%20escribo%20desde%20su%20p%C3%A1gina%20web." target="_blank" class="me-3">
+            <i class="fa-brands fa-whatsapp text-success"></i> 0379 - 154532991
+          </a>
+          <a href="tel:0379415532991" class="me-3 d-none d-md-inline-flex">
+            <i class="fa-solid fa-phone"></i> 03794 - 15532991
+          </a>
+          <a href="mailto:alearce70@yahoo.com.ar">
+            <i class="fa-regular fa-envelope"></i> alearce70@yahoo.com.ar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Principal (Inspirado en diseño Evolution de Armando Vallejos) -->
+  <header class="main-header no-print">
+    <div class="container py-3">
+      <div class="row align-items-center gy-3">
+        <!-- Logo e Identidad -->
+        <div class="col-lg-4 col-md-6 text-center text-md-start d-flex justify-content-center justify-content-md-start">
+          <a href="#inicio" class="brand-logo">
+            <div class="brand-emblem">
+              <i class="fa-solid fa-gavel"></i>
+            </div>
+            <div class="brand-text text-start">
+              <span class="brand-name">Ángel Alejandro Arce</span>
+              <span class="brand-subtitle">Martillero Judicial y Público</span>
+              <small class="text-muted" style="font-size: 11px;">Mat. S.T.J. Ctes. Nº 383 • Corrientes Capital</small>
+            </div>
+          </a>
+        </div>
+
+        <!-- Buscador por Código de Aviso / Edicto (Característica clave de la referencia) -->
+        <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+          <form id="headerCodeForm" class="header-code-search">
+            <div class="input-group">
+              <span class="input-group-text">ARCE-</span>
+              <input
+                type="search"
+                id="headerCodeInput"
+                class="form-control"
+                placeholder="Código aviso (ej: 101)"
+                aria-label="Código aviso"
+              />
+              <button class="btn-code-search" type="submit" title="Buscar por código">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Datos de Sede y Contacto Rápido -->
+        <div class="col-lg-4 d-none d-lg-block text-end">
+          <div class="small fw-semibold text-dark">
+            <i class="fa-solid fa-location-dot text-primary me-1"></i>Plácido Martínez Nº 1350, Corrientes
+          </div>
+          <div class="small text-muted mb-1">Sede Colegio Público de Martilleros y Corredores</div>
+          <a href="#tasaciones" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">
+            <i class="fa-solid fa-file-signature me-1"></i>Solicitar Tasación
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg evo-navbar p-0">
+      <div class="container">
+        <button
+          class="navbar-toggler ms-auto my-1 text-white border-0"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbarCollapse"
+          aria-controls="mainNavbarCollapse"
+          aria-expanded="false"
+          aria-label="Abrir menú"
+        >
+          <i class="fa-solid fa-bars fa-lg"></i>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="mainNavbarCollapse">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#inicio">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#subastas">Subastas y Propiedades</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#actuacion-judicial">Actuación Judicial</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#trayectoria">El Martillero</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tasaciones">Tasaciones</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contacto">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Slider Principal -->
+  <section id="inicio" class="hero-carousel no-print">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5500">
+      <div class="carousel-indicators" style="bottom: 95px;">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80');">
+            <div class="container">
+              <div class="hero-content">
+                <div class="hero-kicker">
+                  <i class="fa-solid fa-gavel"></i> Superior Tribunal de Justicia de Corrientes • Mat. Nº 383
+                </div>
+                <h1 class="hero-title">Subastas Judiciales, Remates Públicos y Operaciones Inmobiliarias</h1>
+                <p class="hero-subtitle">
+                  Transparencia, rigor procesal y respaldo institucional en remates dispuestos por los Juzgados Civiles, Comerciales y Laborales de la Ciudad de Corrientes.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a href="#subastas" class="btn btn-warning fw-bold px-4 py-2 text-dark">
+                    <i class="fa-solid fa-gavel me-2"></i>Ver Subastas y Propiedades
+                  </a>
+                  <a href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20quisiera%20hacer%20una%20consulta%20profesional." target="_blank" class="btn btn-outline-light fw-semibold px-4 py-2">
+                    <i class="fa-brands fa-whatsapp me-2"></i>Consulta Directa
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80');">
+            <div class="container">
+              <div class="hero-content">
+                <div class="hero-kicker">
+                  <i class="fa-solid fa-building-columns"></i> Sede Plácido Martínez Nº 1350 • Corrientes Capital
+                </div>
+                <h2 class="hero-title">Inmuebles, Rodados y Activos Comerciales en Subasta Pública</h2>
+                <p class="hero-subtitle">
+                  Intervención profesional en ejecuciones hipotecarias, concursos preventivos, quiebras y comercialización directa de propiedades en toda la provincia.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a href="#actuacion-judicial" class="btn btn-warning fw-bold px-4 py-2 text-dark">
+                    <i class="fa-solid fa-scale-balanced me-2"></i>Conocer Fuero de Actuación
+                  </a>
+                  <a href="#contacto" class="btn btn-outline-light fw-semibold px-4 py-2">
+                    <i class="fa-solid fa-location-dot me-2"></i>Ubicación de Remates
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80');">
+            <div class="container">
+              <div class="hero-content">
+                <div class="hero-kicker">
+                  <i class="fa-solid fa-file-contract"></i> Pericias y Valuaciones Oficiales
+                </div>
+                <h2 class="hero-title">Tasaciones Judiciales, Sucesorias y Comerciales</h2>
+                <p class="hero-subtitle">
+                  Informes técnicos de valuación con criterio de mercado real para expedientes judiciales, divisiones de condominio, sucesiones y compraventa.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a href="#tasaciones" class="btn btn-warning fw-bold px-4 py-2 text-dark">
+                    <i class="fa-solid fa-calculator me-2"></i>Solicitar Tasación Ahora
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buscador Superpuesto (Diseño "Encuentre su propiedad" de armandovallejos.com.ar) -->
+  <section class="home-properties-filter-evolution no-print">
+    <div class="container">
+      <div class="filter-card">
+        <h5 class="home-filter-title">
+          <i class="fa-solid fa-magnifying-glass-Location text-warning"></i>
+          Encuentre su subasta judicial o propiedad
+        </h5>
+
+        <!-- Píldoras de acceso rápido -->
+        <div class="category-pills">
+          <button type="button" class="category-pill active" data-op="">
+            <i class="fa-solid fa-layer-group"></i> Todas las publicaciones
+          </button>
+          <button type="button" class="category-pill" data-op="subasta">
+            <i class="fa-solid fa-gavel"></i> Subastas Judiciales
+          </button>
+          <button type="button" class="category-pill" data-op="quiebra">
+            <i class="fa-solid fa-industry"></i> Quiebras y Concursos
+          </button>
+          <button type="button" class="category-pill" data-op="venta">
+            <i class="fa-solid fa-house-circle-check"></i> Venta Directa
+          </button>
+        </div>
+
+        <form id="homeFilterForm">
+          <div class="row g-3 align-items-center">
+            <div class="col-lg-10 col-md-12">
+              <div class="row g-3">
+                <div class="col-lg-4 col-md-6">
+                  <select id="filterType" class="form-select">
+                    <option value="">Tipo de bien / propiedad</option>
+                    <option value="inmueble">Inmueble Urbano / Casa</option>
+                    <option value="departamento">Departamento</option>
+                    <option value="terreno">Terreno / Lote Comercial</option>
+                    <option value="vehiculo">Vehículos / Rodados / Chasis</option>
+                    <option value="maquinaria">Maquinarias y Bienes Muebles</option>
+                  </select>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <select id="filterOperation" class="form-select">
+                    <option value="">Tipo de Operación</option>
+                    <option value="subasta">Subasta Judicial</option>
+                    <option value="quiebra">Remate por Quiebra / Concurso</option>
+                    <option value="venta">Venta Directa</option>
+                  </select>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <select id="filterLocation" class="form-select">
+                    <option value="">Ubicación (Corrientes)</option>
+                    <option value="centro">● Corrientes Capital - Centro</option>
+                    <option value="cambacua">● Corrientes Capital - Costanera / Camba Cuá</option>
+                    <option value="libertad">● Corrientes Capital - Barrio Libertad / Sede</option>
+                    <option value="3deabril">● Corrientes Capital - Av. 3 de Abril / Ferré</option>
+                    <option value="ruta12">● Corrientes Capital - Corredor Ruta Nac. 12</option>
+                    <option value="santaana">● Gran Corrientes - Santa Ana</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Fila de Búsqueda Avanzada (Igual que en la referencia) -->
+              <div id="advancedFilterRow" class="row g-3 mt-1 d-none">
+                <div class="col-lg-4 col-md-6">
+                  <select id="filterCurrency" class="form-select">
+                    <option value="">Moneda (Todas)</option>
+                    <option value="ARS">Pesos Argentinos ($ ARS)</option>
+                    <option value="USD">Dólares (USD)</option>
+                  </select>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text bg-light small">Sup. m²</span>
+                    <input type="number" id="filterAreaFrom" class="form-control" placeholder="Mín." min="0" />
+                    <input type="number" id="filterAreaTo" class="form-control" placeholder="Máx." min="0" />
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <div class="input-group">
+                    <span class="input-group-text bg-light small">Base/Precio</span>
+                    <input type="number" id="filterPriceFrom" class="form-control" placeholder="Mín." min="0" />
+                    <input type="number" id="filterPriceTo" class="form-control" placeholder="Máx." min="0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-12">
+              <div class="d-grid">
+                <button type="submit" class="btn-filter-search">
+                  <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="filterValidationMsg" class="alert alert-danger py-2 px-3 mt-3 mb-0 small d-none"></div>
+
+          <div class="text-center mt-2">
+            <button type="button" id="toggleAdvancedBtn" class="btn-advanced-toggle">
+              <i class="fa-solid fa-sliders me-1"></i>Búsqueda avanzada
+            </button>
+            <span class="text-muted mx-2">|</span>
+            <button type="button" class="btn-advanced-toggle text-secondary" onclick="resetAllFilters()">
+              Limpiar filtros
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Listado de Subastas Judiciales, Remates y Propiedades -->
+  <section id="subastas" class="py-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end section-header">
+        <div>
+          <span class="text-uppercase small fw-bold text-warning">Cartelera de Edictos y Cartera</span>
+          <h2 class="section-title mb-0">Subastas Judiciales, Remates y Propiedades Destacadas</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+          <span id="resultsCountBadge" class="badge bg-primary px-3 py-2">6 publicaciones activas</span>
+        </div>
+      </div>
+
+      <!-- Grilla de 3 columnas (idéntica a U/T de armandovallejos.com.ar) -->
+      <div id="propertiesContainer" class="row"></div>
+    </div>
+  </section>
+
+  <!-- Banner Institucional (Equivalente a .special-text bg-primary de la referencia) -->
+  <section class="special-banner my-4 no-print">
+    <div class="container text-center">
+      <i class="fa-solid fa-scale-balanced fa-2x text-warning mb-3"></i>
+      <p class="special-text mb-3">
+        “Seguridad jurídica, publicidad transparente y estricto cumplimiento procesal en cada subasta pública y tasación encomendada por los Tribunales de la Provincia de Corrientes.”
+      </p>
+      <div class="small text-warning fw-semibold text-uppercase">
+        Ángel Alejandro Arce • Martillero Judicial Matrícula S.T.J. Ctes. Nº 383
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Actuación Judicial y Servicios Profesionales -->
+  <section id="actuacion-judicial" class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="text-uppercase small fw-bold text-primary">Especialización Profesional</span>
+        <h2 class="section-title d-inline-block">Servicios de Martillero Judicial e Inmobiliario</h2>
+        <p class="text-muted mx-auto mt-2" style="max-width: 680px;">
+          Desempeño activo como auxiliar de la justicia e intermediación profesional en la Ciudad de Corrientes y toda la Primera Circunscripción Judicial.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-3 col-md-6">
+          <div class="service-card">
+            <div class="icon-wrap"><i class="fa-solid fa-gavel"></i></div>
+            <h5 class="fw-bold text-dark">Remates y Subastas Judiciales</h5>
+            <p class="text-muted small mb-0">
+              Ejecución de subastas públicas de bienes inmuebles, automotores y muebles ordenadas por Juzgados Civiles, Comerciales y Laborales de Corrientes (Juzgados Nº 8, Nº 9, Laboral Nº 4, entre otros).
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="service-card">
+            <div class="icon-wrap"><i class="fa-solid fa-Briefcase"></i><i class="fa-solid fa-building-shield"></i></div>
+            <h5 class="fw-bold text-dark">Concursos y Quiebras</h5>
+            <p class="text-muted small mb-0">
+              Liquidación de activos falenciales, flotas de vehículos, maquinarias y equipamiento comercial (con antecedentes en causas como <em>Serviclean S.R.L.</em>, <em>Distribuidora Ariel S.R.L.</em> y <em>Agroleg S.A.</em>).
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="service-card">
+            <div class="icon-wrap"><i class="fa-solid fa-file-signature"></i></div>
+            <h5 class="fw-bold text-dark">Tasaciones Oficiales y Pericias</h5>
+            <p class="text-muted small mb-0">
+              Determinación técnica del valor venal y de mercado para informes periciales, sucesiones, divisiones de condominio, ejecuciones hipotecarias y garantías patrimoniales.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="service-card">
+            <div class="icon-wrap"><i class="fa-solid fa-house-chimney-user"></i></div>
+            <h5 class="fw-bold text-dark">Operaciones Inmobiliarias</h5>
+            <p class="text-muted small mb-0">
+              Asesoramiento personalizado en compra y venta de propiedades urbanas, terrenos, locales comerciales y quintas en Corrientes Capital y zonas de influencia.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Trayectoria / La Empresa (Equivalente a /company de la referencia) -->
+  <section id="trayectoria" class="py-5">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-2 mb-2">
+            PERFIL INSTITUCIONAL • CORRIENTES
+          </span>
+          <h2 class="fw-bold text-dark mb-3" style="color: var(--primary) !important;">
+            Ángel Alejandro Arce
+          </h2>
+          <h6 class="text-warning-emphasis fw-bold mb-3">
+            Martillero Judicial y Corredor Público — Matrícula S.T.J. Ctes. Nº 383
+          </h6>
+          <p class="text-secondary mb-3">
+            <strong>Ángel Alejandro Arce</strong> cuenta con una reconocida trayectoria como Martillero Judicial matriculado ante el <strong>Superior Tribunal de Justicia de la Provincia de Corrientes (Mat. Nº 383)</strong> e integrante activo del <strong>Colegio Público de Martilleros y Corredores de la Provincia de Corrientes</strong>.
+          </p>
+          <p class="text-secondary mb-3">
+            Como auxiliar de la justicia, interviene por designación de los distintos fueros judiciales de la Capital correntina en la constatación, secuestro, tasación y subasta pública de bienes muebles, rodados e inmuebles derivados de ejecuciones hipotecarias, prendarias, laborales, concursos preventivos y quiebras.
+          </p>
+          <p class="text-secondary mb-4">
+            Sus actos de remate público se llevan a cabo tradicionalmente en el salón de subastas de la sede del <strong>Colegio Público de Martilleros y Corredores de la Provincia de Corrientes</strong>, sito en calle <strong>Plácido Martínez Nº 1350</strong> de la Ciudad de Corrientes, garantizando total transparencia, seguridad jurídica e igualdad de oportunidades para todos los postores e inversores.
+          </p>
+
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 border shadow-sm">
+                <i class="fa-solid fa-certificate fa-2x text-warning"></i>
+                <div>
+                  <div class="fw-bold text-dark">Matrícula S.T.J. Nº 383</div>
+                  <div class="small text-muted">Superior Tribunal de Justicia</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 border shadow-sm">
+                <i class="fa-solid fa-building-columns fa-2x text-primary"></i>
+                <div>
+                  <div class="fw-bold text-dark">Plácido Martínez 1350</div>
+                  <div class="small text-muted">Sede Oficial de Subastas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fa-solid fa-gavel"></i></div>
+                <h4>Fueros Judiciales</h4>
+                <p class="small text-muted mb-0">Actuación en Juzgados Civiles, Comerciales, Concursales y Laborales de Corrientes.</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fa-solid fa-scroll"></i></div>
+                <h4>Edictos Oficiales</h4>
+                <p class="small text-muted mb-0">Publicaciones en el Boletín Oficial de Corrientes y padrones del Colegio de Martilleros.</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fa-solid fa-truck-front"></i></div>
+                <h4>Bienes Muebles e Inmuebles</h4>
+                <p class="small text-muted mb-0">Remates de propiedades urbanas, lotes, flotas de vehículos, chasis y maquinarias.</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fa-solid fa-handshake-simple"></i></div>
+                <h4>Atención Personalizada</h4>
+                <p class="small text-muted mb-0">Asesoramiento previo a postores, revisión de edictos, bases, señas y comisiones de ley.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Tasaciones (Inspirada en /tasaciones de armandovallejos.com.ar) -->
+  <section id="tasaciones" class="tasaciones-section no-print">
+    <div class="container">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-7 text-white pe-lg-5">
+          <span class="badge bg-warning text-dark fw-bold mb-3 px-3 py-2">
+            <i class="fa-solid fa-scale-unbalanced-flip me-1"></i>VALUACIONES PROFESIONALES
+          </span>
+          <h2 class="fw-bold display-6 mb-3">Solicite la Tasación de su Propiedad o Bien</h2>
+          <p class="lead text-light mb-4">
+            Realizamos tasaciones judiciales, sucesorias, comerciales y particulares en toda la Ciudad de Corrientes y alrededores con respaldo matriculado.
+          </p>
+          <ul class="list-unstyled d-grid gap-3">
+            <li class="d-flex align-items-start gap-3">
+              <i class="fa-solid fa-circle-check text-warning mt-1 fa-lg"></i>
+              <div>
+                <strong>Informes Técnicos Fundados:</strong> Análisis comparativo de mercado, ubicación, estado constructivo y potencial normativo.
+              </div>
+            </li>
+            <li class="d-flex align-items-start gap-3">
+              <i class="fa-solid fa-circle-check text-warning mt-1 fa-lg"></i>
+              <div>
+                <strong>Validez para Trámites Judiciales y Sucesiones:</strong> Dictámenes firmados por Martillero Judicial Matrícula S.T.J. Ctes. Nº 383.
+              </div>
+            </li>
+            <li class="d-flex align-items-start gap-3">
+              <i class="fa-solid fa-circle-check text-warning mt-1 fa-lg"></i>
+              <div>
+                <strong>Valuación de Inmuebles, Rodados y Maquinarias:</strong> Experiencia integral tanto en bienes raíces como en activos comerciales e industriales.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-lg rounded-4 text-dark">
+            <div class="card-body p-4 p-md-5">
+              <h4 class="fw-bold text-primary mb-1">Formulario de Tasaciones</h4>
+              <p class="text-muted small mb-4">Complete los datos y nos comunicaremos a la brevedad.</p>
+
+              <form id="tasacionesForm">
+                <div class="row g-2">
+                  <div class="col-sm-6 mb-2">
+                    <input type="text" id="tasFirstName" class="form-control" placeholder="Nombre *" required />
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <input type="text" id="tasLastName" class="form-control" placeholder="Apellido *" required />
+                  </div>
+                </div>
+                <div class="mb-2">
+                  <input type="tel" id="tasPhone" class="form-control" placeholder="Teléfono / Celular *" required />
+                </div>
+                <div class="mb-2">
+                  <input type="email" id="tasEmail" class="form-control" placeholder="Email *" required />
+                </div>
+                <div class="mb-2">
+                  <select id="tasType" class="form-select" required>
+                    <option value="">Tipo de propiedad / bien *</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Departamento">Departamento</option>
+                    <option value="Terreno / Lote">Terreno / Lote</option>
+                    <option value="Local / Galpón">Local Comercial / Galpón</option>
+                    <option value="Quinta / Campo">Quinta / Campo</option>
+                    <option value="Vehículo / Rodado">Vehículo / Flota / Rodado</option>
+                    <option value="Maquinaria / Muebles">Maquinaria / Bienes de Uso</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <textarea
+                    id="tasDetails"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Ubicación y características del bien (ej. motivo judicial, sucesión o venta) *"
+                    required
+                  ></textarea>
+                </div>
+
+                <div id="tasacionesAlert" class="alert alert-success small d-none">
+                  <strong>¡Solicitud registrada!</strong> Muchas gracias por su mensaje. También puede enviarla ahora mismo directo al WhatsApp del Martillero:
+                  <div class="mt-2">
+                    <a id="tasacionesWaFollowup" href="#" target="_blank" class="btn btn-sm btn-success w-100 fw-semibold">
+                      <i class="fa-brands fa-whatsapp me-1"></i>Confirmar por WhatsApp
+                    </a>
+                  </div>
+                </div>
+
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary py-2 fw-bold">
+                    <i class="fa-solid fa-paper-plane me-2"></i>Enviar Solicitud de Tasación
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Contacto y Mapa Interactivo (Igual que /contact de armandovallejos.com.ar) -->
+  <section id="contacto" class="py-5">
+    <div class="container">
+      <div class="section-header">
+        <span class="text-uppercase small fw-bold text-primary">Atención e Informes</span>
+        <h2 class="section-title mb-0">Contacto y Lugar de Subastas</h2>
+      </div>
+
+      <div class="row g-4">
+        <!-- Columna Izquierda: Tarjeta de Sede + Mapa Leaflet -->
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4 p-md-5">
+              <div class="row g-4 align-items-center">
+                <div class="col-md-6">
+                  <span class="badge bg-warning text-dark mb-2">Sede de Actos de Subasta e Informes</span>
+                  <h4 class="fw-bold text-primary mb-3">Escritorio y Sala de Remates</h4>
+                  <ul class="list-unstyled d-grid gap-3 mb-0">
+                    <li class="d-flex align-items-start gap-3">
+                      <div class="text-primary mt-1"><i class="fa-solid fa-location-dot fa-lg"></i></div>
+                      <div>
+                        <strong class="d-block text-dark">Dirección en Corrientes Capital:</strong>
+                        <span class="text-secondary">Plácido Martínez Nº 1350, Ciudad de Corrientes</span>
+                        <small class="d-block text-muted">(Sede del Colegio Público de Martilleros y Corredores de la Provincia de Corrientes)</small>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                      <div class="text-success mt-1"><i class="fa-brands fa-whatsapp fa-lg"></i></div>
+                      <div>
+                        <strong class="d-block text-dark">WhatsApp / Celular de Informes:</strong>
+                        <a href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20le%20escribo%20por%20una%20consulta." target="_blank" class="text-primary fw-semibold">
+                          0379 - 154532991
+                        </a>
+                        <span class="text-muted"> / </span>
+                        <a href="tel:0379415532991" class="text-secondary">03794 - 15532991</a>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                      <div class="text-primary mt-1"><i class="fa-solid fa-envelope fa-lg"></i></div>
+                      <div>
+                        <strong class="d-block text-dark">Correo Electrónico Oficial:</strong>
+                        <a href="mailto:alearce70@yahoo.com.ar" class="text-primary">alearce70@yahoo.com.ar</a>
+                      </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                      <div class="text-primary mt-1"><i class="fa-solid fa-clock fa-lg"></i></div>
+                      <div>
+                        <strong class="d-block text-dark">Horario de Consultas:</strong>
+                        <span class="text-secondary">Lunes a Viernes de 08:00 a 12:30 y 17:00 a 20:30 hs.</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="col-md-6">
+                  <!-- Mapa Leaflet igual que la referencia -->
+                  <div id="officeMap"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Formulario de Contacto Directo -->
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold text-primary m-0">Contáctenos</h4>
+                <span class="text-muted small">* Obligatorios</span>
+              </div>
+
+              <form id="mainContactForm">
+                <div class="mb-3">
+                  <input type="text" class="form-control" placeholder="Nombre y Apellido *" required />
+                </div>
+                <div class="mb-3">
+                  <input type="tel" class="form-control" placeholder="Teléfono *" required />
+                </div>
+                <div class="mb-3">
+                  <input type="email" class="form-control" placeholder="Email *" required />
+                </div>
+                <div class="mb-3">
+                  <textarea class="form-control" rows="4" placeholder="Mensaje o consulta sobre edicto/propiedad *" required>Hola Martillero Ángel Alejandro Arce, me gustaría realizar una consulta profesional. Muchas gracias.</textarea>
+                </div>
+
+                <div id="mainContactAlert" class="alert alert-success small d-none">
+                  Muchas gracias por su mensaje. Le contestaremos a la brevedad.
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary fw-bold">
+                    Contactar
+                  </button>
+                  <a
+                    href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20me%20comunico%20desde%20su%20sitio%20web."
+                    target="_blank"
+                    class="btn btn-outline-success fw-semibold"
+                  >
+                    <i class="fa-brands fa-whatsapp me-1"></i> Contactar por WhatsApp
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Institucional (Inspirado en .footer de armandovallejos.com.ar) -->
+  <footer class="footer no-print">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="brand-emblem" style="width: 46px; height: 46px; font-size: 20px;">
+              <i class="fa-solid fa-gavel"></i>
+            </div>
+            <div>
+              <h5 class="mb-0 text-white">ÁNGEL ALEJANDRO ARCE</h5>
+              <small class="text-warning fw-semibold">Martillero Judicial • Mat. S.T.J. Nº 383</small>
+            </div>
+          </div>
+          <p class="small text-white-50 mb-3">
+            Auxiliar de la Justicia de la Provincia de Corrientes. Subastas judiciales, ejecuciones hipotecarias, quiebras, tasaciones oficiales y negocios inmobiliarios.
+          </p>
+          <ul class="list-unstyled small mb-0">
+            <li class="mb-2">
+              <div class="icon-container"><i class="fa-brands fa-whatsapp"></i></div>
+              <a href="https://wa.me/5493794532991" target="_blank">0379 - 154532991</a>
+            </li>
+            <li class="mb-2">
+              <div class="icon-container"><i class="fa-solid fa-phone"></i></div>
+              <a href="tel:0379415532991">03794 - 15532991</a>
+            </li>
+            <li class="mb-2">
+              <div class="icon-container"><i class="fa-solid fa-envelope"></i></div>
+              <a href="mailto:alearce70@yahoo.com.ar">alearce70@yahoo.com.ar</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <h5 class="mb-3">Sede de Remates e Informes</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2">
+              <div class="icon-container"><i class="fa-solid fa-location-dot"></i></div>
+              Plácido Martínez Nº 1350, Ciudad de Corrientes, Corrientes
+            </li>
+            <li class="mb-2">
+              <div class="icon-container"><i class="fa-solid fa-building-columns"></i></div>
+              Colegio Público de Martilleros y Corredores de la Provincia de Corrientes
+            </li>
+            <li class="mb-2">
+              <div class="icon-container"><i class="fa-solid fa-scale-balanced"></i></div>
+              Inscripto en el Superior Tribunal de Justicia (Mat. Nº 383)
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+          <h5 class="mb-3">Navegación Rápida</h5>
+          <div class="row small">
+            <div class="col-6">
+              <ul class="list-unstyled d-grid gap-2">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#subastas">Subastas y Propiedades</a></li>
+                <li><a href="#actuacion-judicial">Actuación Judicial</a></li>
+              </ul>
+            </div>
+            <div class="col-6">
+              <ul class="list-unstyled d-grid gap-2">
+                <li><a href="#trayectoria">El Martillero</a></li>
+                <li><a href="#tasaciones">Tasaciones</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-secondary my-4" />
+
+      <div class="row align-items-center small text-white-50">
+        <div class="col-md-8 text-center text-md-start">
+          © 2026 <strong>Ángel Alejandro Arce — Martillero Judicial (Mat. S.T.J. Ctes. Nº 383)</strong>. Todos los derechos reservados.
+        </div>
+        <div class="col-md-4 text-center text-md-end mt-2 mt-md-0">
+          Ciudad de Corrientes, República Argentina
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botón Flotante de WhatsApp (Igual que .whatsapp-floating-button de la referencia) -->
+  <a
+    class="whatsapp-floating-button no-print"
+    href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20me%20comunico%20desde%20su%20sitio%20web."
+    target="_blank"
+    title="Chatear por WhatsApp con Ángel Alejandro Arce"
+  >
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Modal 1: Ver Ficha Completa y Edicto Judicial -->
+  <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-bottom bg-light rounded-top-4">
+          <h5 class="modal-title fw-bold text-primary">
+            <i class="fa-solid fa-gavel me-2 text-warning"></i>Ficha Oficial de Publicación / Edicto
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-4" id="detailModalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Contactar por Publicación (Idéntico al modal de tarjeta de armandovallejos.com.ar) -->
+  <div class="modal fade" id="contactPropertyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body px-4 pb-4 pt-0">
+          <h4 class="fw-bold text-center text-primary mb-1">Contáctanos</h4>
+          <p id="modalPropertyTitle" class="text-center text-muted small mb-3"></p>
+
+          <form id="propertyContactForm">
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Nombre *" required />
+            </div>
+            <div class="mb-3">
+              <input type="tel" class="form-control" placeholder="Teléfono *" required />
+            </div>
+            <div class="mb-3">
+              <input type="email" class="form-control" placeholder="Email *" required />
+            </div>
+            <div class="mb-3">
+              <textarea id="modalContactMessage" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <div id="modalContactAlert" class="alert alert-success small d-none">
+              Muchas gracias por tu mensaje. Te contestaremos a la brevedad.
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary fw-bold">Contactar</button>
+              <a id="modalWhatsappDirectBtn" href="#" target="_blank" class="btn btn-outline-success fw-semibold">
+                <i class="fa-brands fa-whatsapp me-1"></i> Contactar por WhatsApp
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Leaflet 1.9.4 JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Lógica de la aplicación -->
+  <script src="app.js"></script>
+</body>
+</html>
