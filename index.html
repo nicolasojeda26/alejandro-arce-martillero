@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ángel Alejandro Arce | Martillero Judicial y Público - Corrientes (Mat. S.T.J. Nº 383)</title>
-  <meta name="description" content="Ángel Alejandro Arce - Martillero Judicial y Público en la Provincia de Corrientes (Matrícula S.T.J. Ctes. Nº 383). Remates judiciales, subastas públicas, tasaciones oficiales y operaciones inmobiliarias." />
+  <meta name="description" content="Ángel Alejandro Arce - Martillero Judicial y Público en la Provincia de Corrientes (Matrícula S.T.J. Ctes. Nº 383). Remates judiciales, subastas públicas, calculadora de subastas, tasaciones oficiales y operaciones inmobiliarias." />
   <meta name="keywords" content="Angel Alejandro Arce, Martillero Judicial Corrientes, Remates Judiciales Corrientes, Subastas, Tasaciones, Matricula 383, Colegio de Martilleros Corrientes" />
 
-  <!-- Google Fonts: Rubik (igual que sitio de referencia armandovallejos.com.ar) -->
+  <!-- Google Fonts: Rubik -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
@@ -18,13 +18,16 @@
   <!-- Font Awesome 6.5 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
 
-  <!-- Leaflet 1.9.4 CSS (igual que sitio de referencia) -->
+  <!-- Leaflet 1.9.4 CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
   <!-- Estilos personalizados -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- Contenedor de Notificaciones Toast -->
+  <div id="toastContainer" class="custom-toast-container no-print"></div>
 
   <!-- Barra Superior Institucional -->
   <div class="contact-bar no-print">
@@ -43,15 +46,24 @@
           <a href="tel:0379415532991" class="me-3 d-none d-md-inline-flex">
             <i class="fa-solid fa-phone"></i> 03794 - 15532991
           </a>
-          <a href="mailto:alearce70@yahoo.com.ar">
+          <a href="mailto:alearce70@yahoo.com.ar" class="me-3">
             <i class="fa-regular fa-envelope"></i> alearce70@yahoo.com.ar
           </a>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-warning py-0 px-2"
+            style="font-size: 11.5px;"
+            data-bs-toggle="modal"
+            data-bs-target="#adminModal"
+          >
+            <i class="fa-solid fa-user-lock me-1"></i>Panel Martillero
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Header Principal (Inspirado en diseño Evolution de Armando Vallejos) -->
+  <!-- Header Principal -->
   <header class="main-header no-print">
     <div class="container py-3">
       <div class="row align-items-center gy-3">
@@ -69,7 +81,7 @@
           </a>
         </div>
 
-        <!-- Buscador por Código de Aviso / Edicto (Característica clave de la referencia) -->
+        <!-- Buscador por Código de Aviso / Edicto -->
         <div class="col-lg-4 col-md-6 d-flex justify-content-center">
           <form id="headerCodeForm" class="header-code-search">
             <div class="input-group">
@@ -94,9 +106,14 @@
             <i class="fa-solid fa-location-dot text-primary me-1"></i>Plácido Martínez Nº 1350, Corrientes
           </div>
           <div class="small text-muted mb-1">Sede Colegio Público de Martilleros y Corredores</div>
-          <a href="#tasaciones" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">
-            <i class="fa-solid fa-file-signature me-1"></i>Solicitar Tasación
-          </a>
+          <div class="d-inline-flex gap-2">
+            <a href="#calculadora" class="btn btn-sm btn-warning rounded-pill px-3 fw-semibold text-dark">
+              <i class="fa-solid fa-calculator me-1"></i>Calculadora Subastas
+            </a>
+            <a href="#tasaciones" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold">
+              <i class="fa-solid fa-file-signature me-1"></i>Tasaciones
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -124,7 +141,13 @@
               <a class="nav-link" href="#subastas">Subastas y Propiedades</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#actuacion-judicial">Actuación Judicial</a>
+              <a class="nav-link" href="#cronograma">Cronograma</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#calculadora">Calculadora</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#faq">Guía Postores</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#trayectoria">El Martillero</a>
@@ -167,8 +190,8 @@
                   <a href="#subastas" class="btn btn-warning fw-bold px-4 py-2 text-dark">
                     <i class="fa-solid fa-gavel me-2"></i>Ver Subastas y Propiedades
                   </a>
-                  <a href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20quisiera%20hacer%20una%20consulta%20profesional." target="_blank" class="btn btn-outline-light fw-semibold px-4 py-2">
-                    <i class="fa-brands fa-whatsapp me-2"></i>Consulta Directa
+                  <a href="#cronograma" class="btn btn-outline-light fw-semibold px-4 py-2">
+                    <i class="fa-regular fa-calendar-days me-2"></i>Próximas Fechas
                   </a>
                 </div>
               </div>
@@ -189,11 +212,11 @@
                   Intervención profesional en ejecuciones hipotecarias, concursos preventivos, quiebras y comercialización directa de propiedades en toda la provincia.
                 </p>
                 <div class="d-flex flex-wrap gap-2">
-                  <a href="#actuacion-judicial" class="btn btn-warning fw-bold px-4 py-2 text-dark">
-                    <i class="fa-solid fa-scale-balanced me-2"></i>Conocer Fuero de Actuación
+                  <a href="#calculadora" class="btn btn-warning fw-bold px-4 py-2 text-dark">
+                    <i class="fa-solid fa-calculator me-2"></i>Simular Gastos de Subasta
                   </a>
-                  <a href="#contacto" class="btn btn-outline-light fw-semibold px-4 py-2">
-                    <i class="fa-solid fa-location-dot me-2"></i>Ubicación de Remates
+                  <a href="#faq" class="btn btn-outline-light fw-semibold px-4 py-2">
+                    <i class="fa-solid fa-circle-question me-2"></i>¿Cómo participar?
                   </a>
                 </div>
               </div>
@@ -226,12 +249,12 @@
     </div>
   </section>
 
-  <!-- Buscador Superpuesto (Diseño "Encuentre su propiedad" de armandovallejos.com.ar) -->
+  <!-- Buscador Superpuesto -->
   <section class="home-properties-filter-evolution no-print">
     <div class="container">
       <div class="filter-card">
         <h5 class="home-filter-title">
-          <i class="fa-solid fa-magnifying-glass-Location text-warning"></i>
+          <i class="fa-solid fa-magnifying-glass text-warning"></i>
           Encuentre su subasta judicial o propiedad
         </h5>
 
@@ -286,7 +309,7 @@
                 </div>
               </div>
 
-              <!-- Fila de Búsqueda Avanzada (Igual que en la referencia) -->
+              <!-- Fila de Búsqueda Avanzada -->
               <div id="advancedFilterRow" class="row g-3 mt-1 d-none">
                 <div class="col-lg-4 col-md-6">
                   <select id="filterCurrency" class="form-select">
@@ -350,13 +373,142 @@
         </div>
       </div>
 
-      <!-- Grilla de 3 columnas (idéntica a U/T de armandovallejos.com.ar) -->
+      <!-- Grilla de 3 columnas -->
       <div id="propertiesContainer" class="row"></div>
     </div>
   </section>
 
-  <!-- Banner Institucional (Equivalente a .special-text bg-primary de la referencia) -->
-  <section class="special-banner my-4 no-print">
+  <!-- NUEVO: Cronograma / Calendario de Próximos Remates Judiciales con Cuenta Regresiva -->
+  <section id="cronograma" class="py-5 bg-white border-top border-bottom no-print">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end section-header">
+        <div>
+          <span class="text-uppercase small fw-bold text-primary">
+            <i class="fa-regular fa-calendar-check me-1"></i>Agenda Oficial en Sede Plácido Martínez Nº 1350
+          </span>
+          <h2 class="section-title mb-0">Cronograma de Próximas Subastas Judiciales</h2>
+        </div>
+        <div class="small text-muted mt-2 mt-md-0">
+          <i class="fa-solid fa-bell text-warning me-1"></i>Puede agendar cada acto directamente en su Google Calendar
+        </div>
+      </div>
+
+      <div id="scheduleContainer" class="row g-4"></div>
+    </div>
+  </section>
+
+  <!-- NUEVO: Calculadora Interactiva de Gastos de Subasta Judicial -->
+  <section id="calculadora" class="py-5 no-print">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="text-uppercase small fw-bold text-primary">Herramienta para Postores e Inversores</span>
+        <h2 class="section-title d-inline-block">Calculadora de Gastos de Subasta Judicial</h2>
+        <p class="text-muted mx-auto mt-2" style="max-width: 680px;">
+          Simule de forma inmediata cuánto deberá abonar en el acto de remate (Seña de ley, Comisión del Martillero y Sellado) y cuál será el saldo pendiente tras la aprobación judicial.
+        </p>
+      </div>
+
+      <div class="calculator-card">
+        <div class="row g-0">
+          <div class="col-lg-7 p-4 p-md-5">
+            <div id="calcLoadedPropertyLabel" class="alert alert-warning py-2 px-3 small fw-semibold mb-3 d-none"></div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold text-dark">1. Modalidad de Subasta / Tipo de Bien</label>
+              <select id="calcAuctionType" class="form-select">
+                <option value="inmueble">Subasta Judicial de Inmueble (Seña 10% • Comisión 3% • Sellado 1,2%)</option>
+                <option value="rodado">Subasta de Vehículos / Rodados / Quiebra (Seña 30% • Comisión 10% • Sellado 1%)</option>
+                <option value="mueble_contado">Bienes Muebles / Maquinarias al Contado (Pago 100% • Comisión 10% • Sellado 0,6%)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold text-dark">2. Monto de Oferta / Precio de Bajada de Martillo ($ ARS)</label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light fw-bold text-primary">$</span>
+                <input
+                  type="number"
+                  id="calcBidAmount"
+                  class="form-control fw-bold"
+                  value="48500000"
+                  min="0"
+                  step="100000"
+                />
+              </div>
+              <small class="text-muted">Ingrese el valor de base o la oferta máxima que planea realizar en la subasta.</small>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-sm-4">
+                <label class="form-label small fw-semibold text-secondary">% Seña en el acto</label>
+                <div class="input-group">
+                  <input type="number" id="calcSenaPercent" class="form-control" value="10" min="0" max="100" step="0.5" />
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small fw-semibold text-secondary">% Comisión Martillero</label>
+                <div class="input-group">
+                  <input type="number" id="calcComisionPercent" class="form-control" value="3" min="0" max="20" step="0.5" />
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small fw-semibold text-secondary">% Sellado / Acta</label>
+                <div class="input-group">
+                  <input type="number" id="calcSelladoPercent" class="form-control" value="1.2" min="0" max="10" step="0.1" />
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="calculator-result-box">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="badge bg-warning text-dark fw-bold">RESUMEN ESTIMADO</span>
+                  <small class="text-white-50">Mat. S.T.J. Ctes. Nº 383</small>
+                </div>
+
+                <div class="calc-line">
+                  <span>Seña a cuenta de precio:</span>
+                  <strong id="resSena" class="text-warning">$ 4.850.000 (10%)</strong>
+                </div>
+                <div class="calc-line">
+                  <span>Comisión de Ley Martillero:</span>
+                  <strong id="resComision">$ 1.455.000 (3%)</strong>
+                </div>
+                <div class="calc-line">
+                  <span>Sellado de Ley / Acta estimada:</span>
+                  <strong id="resSellado">$ 582.000 (1.2%)</strong>
+                </div>
+
+                <div class="calc-total-acto">
+                  <div class="small text-warning text-uppercase fw-bold">Total a abonar en el acto de remate</div>
+                  <div id="resTotalActo" class="fs-2 fw-bold text-white">$ 6.887.000</div>
+                  <div class="small text-white-50">Incluye Seña + Comisión + Sellado en el acto</div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-top border-secondary">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="small text-white-50">Saldo de precio (tras aprobación judicial):</span>
+                  <strong id="resSaldo" class="fs-5 text-white">$ 43.650.000</strong>
+                </div>
+                <small class="d-block text-white-50 mt-2" style="font-size: 11.5px;">
+                  * Los porcentajes exactos se rigen por lo dispuesto en el Edicto Judicial de cada expediente.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banner Institucional -->
+  <section class="special-banner my-2 no-print">
     <div class="container text-center">
       <i class="fa-solid fa-scale-balanced fa-2x text-warning mb-3"></i>
       <p class="special-text mb-3">
@@ -368,8 +520,90 @@
     </div>
   </section>
 
+  <!-- NUEVO: Guía para Postores y Preguntas Frecuentes (FAQ) -->
+  <section id="faq" class="py-5 bg-white border-bottom no-print">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-5">
+          <span class="text-uppercase small fw-bold text-primary">Información Útil para Participar</span>
+          <h2 class="section-title mb-3">Guía para Postores en Subastas Judiciales</h2>
+          <p class="text-secondary mb-4">
+            Participar en un remate público judicial en la Ciudad de Corrientes es un acto libre, público y transparente. Aquí respondemos las consultas más frecuentes antes de asistir a la sala de subastas en <strong>Plácido Martínez Nº 1350</strong>.
+          </p>
+          <div class="p-4 rounded-4 bg-light border">
+            <h6 class="fw-bold text-primary mb-2">
+              <i class="fa-solid fa-circle-info text-warning me-2"></i>¿Desea revisar un expediente o visitar el bien antes del remate?
+            </h6>
+            <p class="small text-muted mb-3">
+              Puede comunicarse previamente con el Martillero Judicial Ángel Alejandro Arce para coordinar la exhibición de bienes o consultar las copias de títulos y condiciones del edicto.
+            </p>
+            <a href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20tengo%20una%20consulta%20sobre%20c%C3%B3mo%20participar%20en%20una%20subasta." target="_blank" class="btn btn-success btn-sm fw-semibold">
+              <i class="fa-brands fa-whatsapp me-1"></i>Consultar al Martillero
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="accordion shadow-sm rounded-3 overflow-hidden" id="faqAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                  1. ¿Qué requisitos necesito para ofertar el día del remate?
+                </button>
+              </h2>
+              <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-secondary">
+                  Cualquier persona mayor de edad con capacidad legal puede asistir y ofertar a viva voz. Debe concurrir con su <strong>DNI original</strong>, constituir domicilio procesal dentro del radio del Juzgado en la Ciudad de Corrientes y contar con los fondos para abonar en el acto la <strong>Seña de ley</strong> (habitualmente 10% en inmuebles o 30% en muebles/rodados) más la <strong>Comisión del Martillero</strong>.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                  2. ¿Dónde se realizan las subastas presenciales en Corrientes?
+                </button>
+              </h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-secondary">
+                  Tradicionalmente las subastas públicas a cargo del Martillero Ángel Alejandro Arce se realizan en el salón de remates del <strong>Colegio Público de Martilleros y Corredores de la Provincia de Corrientes</strong>, ubicado en calle <strong>Plácido Martínez Nº 1350</strong>, Ciudad de Corrientes, en la fecha y hora exacta fijada por el Edicto Judicial.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                  3. ¿Cuándo se abona el saldo restante del precio en un inmueble?
+                </button>
+              </h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-secondary">
+                  En el acto del remate de un inmueble solo se abona la <strong>seña (10%)</strong>, la <strong>comisión del martillero (3%)</strong> y el sellado del acta. El <strong>saldo del 90% restante</strong> se deposita en la cuenta judicial del expediente (Banco de Corrientes S.A.) dentro del plazo que fije el Juez una vez dictado el auto de aprobación de la subasta.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                  4. ¿Qué ocurre con las deudas anteriores o hipotecas del bien subastado?
+                </button>
+              </h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body text-secondary">
+                  En las subastas judiciales forzosas, el comprador adquiere el bien libre de los embargos e hipotecas que motivaron la ejecución, los cuales se levantan por orden del Juez al momento de otorgar la posesión e inscripción o transferencia registral.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Sección: Actuación Judicial y Servicios Profesionales -->
-  <section id="actuacion-judicial" class="py-5 bg-white border-top border-bottom">
+  <section id="actuacion-judicial" class="py-5 bg-light border-bottom">
     <div class="container">
       <div class="text-center mb-5">
         <span class="text-uppercase small fw-bold text-primary">Especialización Profesional</span>
@@ -392,7 +626,7 @@
 
         <div class="col-lg-3 col-md-6">
           <div class="service-card">
-            <div class="icon-wrap"><i class="fa-solid fa-Briefcase"></i><i class="fa-solid fa-building-shield"></i></div>
+            <div class="icon-wrap"><i class="fa-solid fa-building-shield"></i></div>
             <h5 class="fw-bold text-dark">Concursos y Quiebras</h5>
             <p class="text-muted small mb-0">
               Liquidación de activos falenciales, flotas de vehículos, maquinarias y equipamiento comercial (con antecedentes en causas como <em>Serviclean S.R.L.</em>, <em>Distribuidora Ariel S.R.L.</em> y <em>Agroleg S.A.</em>).
@@ -423,7 +657,7 @@
     </div>
   </section>
 
-  <!-- Sección: Trayectoria / La Empresa (Equivalente a /company de la referencia) -->
+  <!-- Sección: Trayectoria / El Martillero -->
   <section id="trayectoria" class="py-5">
     <div class="container">
       <div class="row align-items-center g-5">
@@ -505,7 +739,7 @@
     </div>
   </section>
 
-  <!-- Sección: Tasaciones (Inspirada en /tasaciones de armandovallejos.com.ar) -->
+  <!-- Sección: Tasaciones -->
   <section id="tasaciones" class="tasaciones-section no-print">
     <div class="container">
       <div class="row align-items-center gy-4">
@@ -604,7 +838,7 @@
     </div>
   </section>
 
-  <!-- Sección: Contacto y Mapa Interactivo (Igual que /contact de armandovallejos.com.ar) -->
+  <!-- Sección: Contacto y Mapa Interactivo -->
   <section id="contacto" class="py-5">
     <div class="container">
       <div class="section-header">
@@ -613,7 +847,6 @@
       </div>
 
       <div class="row g-4">
-        <!-- Columna Izquierda: Tarjeta de Sede + Mapa Leaflet -->
         <div class="col-lg-8">
           <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-body p-4 p-md-5">
@@ -659,7 +892,6 @@
                 </div>
 
                 <div class="col-md-6">
-                  <!-- Mapa Leaflet igual que la referencia -->
                   <div id="officeMap"></div>
                 </div>
               </div>
@@ -667,7 +899,6 @@
           </div>
         </div>
 
-        <!-- Columna Derecha: Formulario de Contacto Directo -->
         <div class="col-lg-4">
           <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-body p-4">
@@ -714,7 +945,7 @@
     </div>
   </section>
 
-  <!-- Footer Institucional (Inspirado en .footer de armandovallejos.com.ar) -->
+  <!-- Footer Institucional -->
   <footer class="footer no-print">
     <div class="container">
       <div class="row gy-4">
@@ -772,14 +1003,16 @@
               <ul class="list-unstyled d-grid gap-2">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#subastas">Subastas y Propiedades</a></li>
-                <li><a href="#actuacion-judicial">Actuación Judicial</a></li>
+                <li><a href="#cronograma">Cronograma de Remates</a></li>
+                <li><a href="#calculadora">Calculadora de Gastos</a></li>
               </ul>
             </div>
             <div class="col-6">
               <ul class="list-unstyled d-grid gap-2">
+                <li><a href="#faq">Guía para Postores</a></li>
                 <li><a href="#trayectoria">El Martillero</a></li>
                 <li><a href="#tasaciones">Tasaciones</a></li>
-                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="#" data-bs-toggle="modal" data-bs-target="#adminModal">Panel Martillero</a></li>
               </ul>
             </div>
           </div>
@@ -799,7 +1032,7 @@
     </div>
   </footer>
 
-  <!-- Botón Flotante de WhatsApp (Igual que .whatsapp-floating-button de la referencia) -->
+  <!-- Botón Flotante de WhatsApp -->
   <a
     class="whatsapp-floating-button no-print"
     href="https://wa.me/5493794532991?text=Hola%20Martillero%20%C3%81ngel%20Alejandro%20Arce,%20me%20comunico%20desde%20su%20sitio%20web."
@@ -809,13 +1042,28 @@
     <i class="fa-brands fa-whatsapp"></i>
   </a>
 
-  <!-- Modal 1: Ver Ficha Completa y Edicto Judicial -->
+  <!-- Visor Lightbox a Pantalla Completa -->
+  <div id="fullscreenLightbox" class="fullscreen-lightbox d-none no-print">
+    <button type="button" class="lightbox-close-btn" onclick="closeFullscreenLightbox()" title="Cerrar">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <button type="button" class="lightbox-nav-btn prev" onclick="navigateLightbox(-1)" title="Anterior">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <img id="lightboxImg" src="" alt="Vista ampliada" />
+    <button type="button" class="lightbox-nav-btn next" onclick="navigateLightbox(1)" title="Siguiente">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+    <div id="lightboxCounter" class="text-white small mt-3 fw-semibold"></div>
+  </div>
+
+  <!-- Modal 1: Ver Ficha Completa, Galería y Edicto Judicial -->
   <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
         <div class="modal-header border-bottom bg-light rounded-top-4">
           <h5 class="modal-title fw-bold text-primary">
-            <i class="fa-solid fa-gavel me-2 text-warning"></i>Ficha Oficial de Publicación / Edicto
+            <i class="fa-solid fa-gavel me-2 text-warning"></i>Ficha Oficial de Publicación / Edicto Judicial
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
@@ -824,7 +1072,7 @@
     </div>
   </div>
 
-  <!-- Modal 2: Contactar por Publicación (Idéntico al modal de tarjeta de armandovallejos.com.ar) -->
+  <!-- Modal 2: Contactar por Publicación -->
   <div class="modal fade" id="contactPropertyModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -860,6 +1108,175 @@
               </a>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVO Modal 3: Panel de Administración Fácil para el Martillero -->
+  <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-primary text-white rounded-top-4">
+          <h5 class="modal-title fw-bold">
+            <i class="fa-solid fa-user-shield text-warning me-2"></i>Panel de Gestión — Martillero Ángel Alejandro Arce
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-4">
+          <!-- Vista de Login con Clave -->
+          <div id="adminLoginView" class="mx-auto py-4" style="max-width: 420px;">
+            <div class="text-center mb-4">
+              <div class="brand-emblem mx-auto mb-3">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <h5 class="fw-bold text-primary">Acceso para el Martillero</h5>
+              <p class="small text-muted mb-0">
+                Ingrese su clave para cargar, editar o dar de baja edictos, subastas judiciales y propiedades.
+              </p>
+              <span class="badge bg-warning-subtle text-dark border mt-2">Clave de acceso: <strong>arce383</strong></span>
+            </div>
+
+            <form id="adminLoginForm">
+              <div class="mb-3">
+                <input
+                  type="password"
+                  id="adminPinInput"
+                  class="form-control form-control-lg text-center"
+                  placeholder="Ingrese clave (arce383)"
+                  required
+                />
+              </div>
+              <div id="adminLoginError" class="alert alert-danger py-2 small d-none">
+                Clave incorrecta. Intente con <strong>arce383</strong>.
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary fw-bold py-2">
+                  Ingresar al Panel
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Vista de Dashboard una vez logueado -->
+          <div id="adminDashboardView" class="d-none">
+            <div class="row g-4">
+              <div class="col-lg-5">
+                <div class="p-3 bg-light rounded-3 border">
+                  <h6 id="adminFormTitle" class="fw-bold text-primary mb-3">Cargar Nueva Subasta o Propiedad</h6>
+                  <form id="adminItemForm">
+                    <input type="hidden" id="adminEditId" value="" />
+                    <div class="mb-2">
+                      <input type="text" id="admTitle" class="form-control form-control-sm" placeholder="Título del remate o propiedad *" required />
+                    </div>
+                    <div class="mb-2">
+                      <input type="text" id="admAddress" class="form-control form-control-sm" placeholder="Dirección o lugar de exhibición *" required />
+                    </div>
+                    <div class="row g-2 mb-2">
+                      <div class="col-6">
+                        <select id="admOperation" class="form-select form-select-sm" required>
+                          <option value="subasta">Subasta Judicial</option>
+                          <option value="quiebra">Remate por Quiebra</option>
+                          <option value="venta">Venta Directa</option>
+                        </select>
+                      </div>
+                      <div class="col-6">
+                        <select id="admType" class="form-select form-select-sm" required>
+                          <option value="inmueble">Inmueble Urbano</option>
+                          <option value="departamento">Departamento</option>
+                          <option value="terreno">Terreno / Lote</option>
+                          <option value="vehiculo">Vehículos y Rodados</option>
+                          <option value="maquinaria">Maquinaria y Muebles</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row g-2 mb-2">
+                      <div class="col-6">
+                        <select id="admLocation" class="form-select form-select-sm">
+                          <option value="centro">Corrientes - Centro</option>
+                          <option value="cambacua">Costanera / Camba Cuá</option>
+                          <option value="libertad">Barrio Libertad / Sede</option>
+                          <option value="3deabril">Av. 3 de Abril / Ferré</option>
+                          <option value="ruta12">Corredor Ruta 12</option>
+                          <option value="santaana">Santa Ana</option>
+                        </select>
+                      </div>
+                      <div class="col-6">
+                        <input type="datetime-local" id="admAuctionDateISO" class="form-control form-control-sm" title="Fecha y hora de subasta (opcional)" />
+                      </div>
+                    </div>
+                    <div class="row g-2 mb-2">
+                      <div class="col-4">
+                        <select id="admCurrency" class="form-select form-select-sm">
+                          <option value="ARS">$ ARS</option>
+                          <option value="USD">USD</option>
+                        </select>
+                      </div>
+                      <div class="col-8">
+                        <input type="number" id="admPrice" class="form-control form-control-sm" placeholder="Monto Base / Precio *" required />
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <input type="text" id="admConditions" class="form-control form-control-sm" placeholder="Condiciones (ej: Seña 10% • Comisión 3%) *" required />
+                    </div>
+                    <div class="row g-2 mb-2">
+                      <div class="col-6">
+                        <input type="text" id="admJuzgado" class="form-control form-control-sm" placeholder="Juzgado interviniente" />
+                      </div>
+                      <div class="col-6">
+                        <input type="text" id="admExpediente" class="form-control form-control-sm" placeholder="Carátula / Expediente" />
+                      </div>
+                    </div>
+                    <div class="row g-2 mb-2">
+                      <div class="col-6">
+                        <input type="number" id="admArea" class="form-control form-control-sm" placeholder="Superficie m² (opcional)" />
+                      </div>
+                      <div class="col-6">
+                        <input type="text" id="admRooms" class="form-control form-control-sm" placeholder="Ambientes / Lotes (ej: 4 Amb.)" />
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <input type="url" id="admImage" class="form-control form-control-sm" placeholder="URL de foto principal (opcional)" />
+                    </div>
+                    <div class="mb-2">
+                      <textarea id="admDescription" class="form-control form-control-sm" rows="2" placeholder="Descripción breve *" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                      <textarea id="admEdicto" class="form-control form-control-sm" rows="3" placeholder="Texto completo del Edicto Judicial *" required></textarea>
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button type="submit" class="btn btn-primary btn-sm fw-bold">
+                        <i class="fa-solid fa-floppy-disk me-1"></i>Guardar Publicación
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="col-lg-7">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="fw-bold text-dark mb-0">Publicaciones Activas en el Portal</h6>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="resetDefaultCatalog()">
+                    <i class="fa-solid fa-rotate-left me-1"></i>Restaurar Originales
+                  </button>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle small">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Cód.</th>
+                        <th>Título / Juzgado</th>
+                        <th>Operación</th>
+                        <th>Base / Valor</th>
+                        <th class="text-end">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminItemsTbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
