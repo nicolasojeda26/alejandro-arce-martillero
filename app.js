@@ -8,14 +8,14 @@ const MARTILLERO_INFO = {
   phoneRaw: "5493794532991",
   phoneAlt: "03794 - 15532991",
   email: "alearce70@yahoo.com.ar",
-  address: "Plácido Martínez Nº 1350",
+  address: "Catamarca Nº 1057",
   city: "Ciudad de Corrientes, Corrientes, Argentina",
   schedule: "Lunes a Viernes de 08:00 a 12:30 y 17:00 a 20:30 hs.",
-  coords: [-27.4638, -58.8322],
+  coords: [-27.4692, -58.8341],
   adminPin: "arce383"
 };
 
-const STORAGE_KEY = "arce_martillero_listings_v2";
+const STORAGE_KEY = "arce_martillero_listings_v3";
 
 // Helper para generar fechas futuras dinámicas para el cronograma en vivo
 function getFutureDateISO(daysAhead, hour = 10, minute = 0) {
@@ -53,7 +53,7 @@ const DEFAULT_LISTINGS_DATA = [
     totalArea: 285,
     coveredArea: 210,
     rooms: "5 Ambientes",
-    auctionDate: "Sede Plácido Martínez Nº 1350 • 10:00 hs.",
+    auctionDate: "Sede Catamarca Nº 1057 • 10:00 hs.",
     auctionDateISO: getFutureDateISO(6, 10, 0),
     image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80",
     images: [
@@ -63,7 +63,7 @@ const DEFAULT_LISTINGS_DATA = [
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
     ],
     description: "Importante propiedad edificada sobre lote propio en pleno radio céntrico de la Ciudad de Corrientes. Cuenta con salón al frente, dependencias, patio interno y todos los servicios conectados.",
-    edicto: "EDICTO JUDICIAL: Por disposición del Juzgado Civil y Comercial Nº 9 de la Primera Circunscripción Judicial de la Provincia de Corrientes, se hace saber por tres (3) días que el Martillero Judicial Ángel Alejandro Arce (Mat. S.T.J. Ctes. Nº 383) procederá a la venta en pública subasta del inmueble urbano sito en el radio céntrico de esta ciudad. Acto de remate en calle Plácido Martínez Nº 1350 (Sede del Colegio Público de Martilleros y Corredores de Corrientes). En el acto el comprador abonará el 10% de seña y el 3% de comisión de ley más gastos. Informes al Cel. 0379-154532991 o al correo alearce70@yahoo.com.ar."
+    edicto: "EDICTO JUDICIAL: Por disposición del Juzgado Civil y Comercial Nº 9 de la Primera Circunscripción Judicial de la Provincia de Corrientes, se hace saber por tres (3) días que el Martillero Judicial Ángel Alejandro Arce (Mat. S.T.J. Ctes. Nº 383) procederá a la venta en pública subasta del inmueble urbano sito en el radio céntrico de esta ciudad. Acto de remate en calle Catamarca Nº 1057 (Sede del Colegio Público de Martilleros y Corredores de Corrientes). En el acto el comprador abonará el 10% de seña y el 3% de comisión de ley más gastos. Informes al Cel. 0379-154532991 o al correo alearce70@yahoo.com.ar."
   },
   {
     id: 2,
@@ -92,7 +92,7 @@ const DEFAULT_LISTINGS_DATA = [
     totalArea: 0,
     coveredArea: 0,
     rooms: "Lote Rodados",
-    auctionDate: "Subasta Presencial • Plácido Martínez 1350 • 11:00 hs.",
+    auctionDate: "Subasta Presencial • Catamarca 1057 • 11:00 hs.",
     auctionDateISO: getFutureDateISO(11, 11, 0),
     image: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80",
     images: [
@@ -146,7 +146,7 @@ const DEFAULT_LISTINGS_DATA = [
     code: "104",
     slug: "ARCE-104",
     title: "Maquinaria Industrial, Herramientas y Equipamiento Comercial",
-    address: "Plácido Martínez Nº 1350 (Lugar de Subasta)",
+    address: "Catamarca Nº 1057 (Lugar de Subasta)",
     neighborhood: "Libertad / Centro",
     locationId: "libertad",
     locationLabel: "Corrientes Capital • Barrio Libertad",
@@ -177,7 +177,7 @@ const DEFAULT_LISTINGS_DATA = [
       "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80"
     ],
     description: "Subasta judicial de equipamiento industrial, máquinas de limpieza profesional, estanterías metálicas, mobiliario de oficina y herramientas de taller en lotes individuales.",
-    edicto: "EDICTO JUDICIAL: El Martillero Judicial Ángel Alejandro Arce (Matrícula S.T.J. Ctes. Nº 383) comunica que en la sede del Colegio Público de Martilleros y Corredores (Plácido Martínez Nº 1350, Corrientes) se procederá al remate público de bienes muebles, maquinarias y equipamiento comercial. Informes: Cel. 0379-154532991."
+    edicto: "EDICTO JUDICIAL: El Martillero Judicial Ángel Alejandro Arce (Matrícula S.T.J. Ctes. Nº 383) comunica que en la sede del Colegio Público de Martilleros y Corredores (Catamarca Nº 1057, Corrientes) se procederá al remate público de bienes muebles, maquinarias y equipamiento comercial. Informes: Cel. 0379-154532991."
   },
   {
     id: 5,
@@ -206,7 +206,7 @@ const DEFAULT_LISTINGS_DATA = [
     totalArea: 450,
     coveredArea: 85,
     rooms: "Lote 15x30m",
-    auctionDate: "Sede Plácido Martínez Nº 1350 • 10:30 hs.",
+    auctionDate: "Sede Catamarca Nº 1057 • 10:30 hs.",
     auctionDateISO: getFutureDateISO(22, 10, 30),
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80",
     images: [
@@ -215,7 +215,7 @@ const DEFAULT_LISTINGS_DATA = [
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80"
     ],
     description: "Fracción de terreno en esquina estratégica con alto tránsito vehicular y excelente FOT para desarrollo en altura o salón de exposición comercial en Corrientes Capital.",
-    edicto: "EDICTO JUDICIAL: Subasta ordenada en autos sobre División de Condominio por ante el Juzgado Civil y Comercial de Corrientes Capital. Martillero designado: Ángel Alejandro Arce (Mat. S.T.J. Nº 383). Consultas de títulos y planos en escritorio de calle Plácido Martínez Nº 1350."
+    edicto: "EDICTO JUDICIAL: Subasta ordenada en autos sobre División de Condominio por ante el Juzgado Civil y Comercial de Corrientes Capital. Martillero designado: Ángel Alejandro Arce (Mat. S.T.J. Nº 383). Consultas de títulos y planos en escritorio de calle Catamarca Nº 1057."
   },
   {
     id: 6,
@@ -366,7 +366,7 @@ function renderListings(items) {
       const coveredText =
         item.coveredArea > 0
           ? `<div class="item" title="Superficie Cubierta"><i class="fa-solid fa-house"></i><span>${item.coveredArea} m² cub.</span></div>`
-          : `<div class="item" title="Sede"><i class="fa-solid fa-building-columns"></i><span>Plácido Martínez 1350</span></div>`;
+          : `<div class="item" title="Sede"><i class="fa-solid fa-building-columns"></i><span>Catamarca 1057</span></div>`;
 
       const countdownStr = item.auctionDateISO ? formatCountdown(item.auctionDateISO) : null;
 
@@ -469,7 +469,7 @@ function renderUpcomingSchedule() {
         `Subasta Judicial (${item.slug}): ${item.title}`
       )}&dates=${gcalStart}/${gcalEnd}&details=${encodeURIComponent(
         `${item.edicto}\nMartillero: Ángel Alejandro Arce (Mat. STJ Nº 383)`
-      )}&location=${encodeURIComponent("Plácido Martínez 1350, Corrientes, Argentina")}`;
+      )}&location=${encodeURIComponent("Catamarca 1057, Corrientes, Argentina")}`;
 
       return `
         <div class="col-lg-6">
@@ -489,7 +489,7 @@ function renderUpcomingSchedule() {
                   <i class="fa-solid fa-gavel text-primary me-1"></i>${item.juzgado}
                 </div>
                 <div class="small text-dark fw-semibold">
-                  <i class="fa-regular fa-clock text-warning me-1"></i>Horario: ${timeStr} • <i class="fa-solid fa-location-dot text-danger ms-1 me-1"></i>Plácido Martínez Nº 1350
+                  <i class="fa-regular fa-clock text-warning me-1"></i>Horario: ${timeStr} • <i class="fa-solid fa-location-dot text-danger ms-1 me-1"></i>Catamarca Nº 1057
                 </div>
               </div>
             </div>
@@ -854,7 +854,7 @@ function downloadEdictPDF(id) {
         <div>
           <p class="title-martillero">ÁNGEL ALEJANDRO ARCE</p>
           <p class="sub-martillero">Martillero Judicial y Público • Matrícula S.T.J. Ctes. Nº 383</p>
-          <p class="sub-martillero">Sede de Subastas: Plácido Martínez Nº 1350, Ciudad de Corrientes • Tel: 0379-154532991</p>
+          <p class="sub-martillero">Sede de Subastas: Catamarca Nº 1057, Ciudad de Corrientes • Tel: 0379-154532991</p>
         </div>
         <div class="badge">CÓD. ${item.slug}</div>
       </div>
@@ -882,7 +882,7 @@ function downloadEdictPDF(id) {
 
       <div class="footer">
         Documento emitido desde el portal web oficial de Ángel Alejandro Arce — Martillero Judicial (Mat. S.T.J. Ctes. Nº 383)<br>
-        Informes: Plácido Martínez Nº 1350, Corrientes Capital | Cel/WhatsApp: 0379-154532991 | Email: alearce70@yahoo.com.ar
+        Informes: Catamarca Nº 1057, Corrientes Capital | Cel/WhatsApp: 0379-154532991 | Email: alearce70@yahoo.com.ar
       </div>
       <script>
         window.onload = function() { setTimeout(function() { window.print(); }, 400); };
@@ -1158,7 +1158,7 @@ function setupAdminPanel() {
         coveredArea: 0,
         rooms: document.getElementById("admRooms").value.trim() || "Lote Judicial",
         auctionDate: dateVal
-          ? `Fecha: ${new Date(dateVal).toLocaleString("es-AR")} • Plácido Martínez 1350`
+          ? `Fecha: ${new Date(dateVal).toLocaleString("es-AR")} • Catamarca Nº 1057`
           : "Consultar fecha y horario",
         auctionDateISO: dateVal ? new Date(dateVal).toISOString() : null,
         image: imgUrl,
@@ -1283,7 +1283,7 @@ function initOfficeMap() {
   const marker = L.marker(MARTILLERO_INFO.coords).addTo(map);
   marker
     .bindPopup(
-      `<strong>Ángel Alejandro Arce</strong><br>Martillero Judicial (Mat. S.T.J. Nº 383)<br>📍 Plácido Martínez Nº 1350, Corrientes Capital<br><small>Sede Colegio Público de Martilleros y Corredores</small>`
+      `<strong>Ángel Alejandro Arce</strong><br>Martillero Judicial (Mat. S.T.J. Nº 383)<br>📍 Catamarca Nº 1057, Corrientes Capital<br><small>Sede Colegio Público de Martilleros y Corredores</small>`
     )
     .openPopup();
 }
