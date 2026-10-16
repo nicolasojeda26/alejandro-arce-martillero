@@ -1058,3 +1058,124 @@ a {
     display: none !important;
   }
 }
+
+/* ==========================================================
+   PANEL DE ADMINISTRACIÓN Y BANNERS INSTITUCIONALES
+   ========================================================== */
+
+/* Barra de Anuncio Urgente Superior */
+.urgent-announcement-bar {
+  background: linear-gradient(90deg, #991b1b 0%, #b91c1c 45%, #c59b27 100%);
+  color: #ffffff;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1035;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.urgent-announcement-bar .badge {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Navegación por pestañas del Panel */
+.admin-nav-pills .nav-link {
+  color: var(--text-dark);
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 8px 14px;
+  transition: var(--transition);
+}
+
+.admin-nav-pills .nav-link:hover {
+  background-color: #e2e8f0;
+  color: var(--primary);
+}
+
+.admin-nav-pills .nav-link.active {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(11, 46, 89, 0.2);
+}
+
+/* Tarjetas KPI del Panel */
+.admin-kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px;
+  transition: var(--transition);
+}
+
+.admin-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Miniatura en tabla de catálogo */
+.admin-table-thumb {
+  width: 52px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Tarjetas de Consultas en Bandeja de Entrada */
+.inbox-item-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-left: 4px solid #94a3b8;
+  border-radius: 10px;
+  padding: 16px;
+  transition: var(--transition);
+}
+
+.inbox-item-card.is-new {
+  border-left-color: #16a34a;
+  background-color: #f0fdf4;
+}
+
+.inbox-item-card.is-answered {
+  border-left-color: #0284c7;
+  background-color: #f8fafc;
+}
+
+.inbox-item-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Miniaturas de vista previa de fotos en formulario admin */
+.admin-preview-img-box {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px;
+  background: #f8fafc;
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+}
+
+.admin-img-preview-thumb {
+  width: 72px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+/* Estilo para tarjetas de vista previa institucional */
+.profile-preview-card {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid rgba(197, 155, 39, 0.5);
+  box-shadow: var(--shadow-md);
+}
+

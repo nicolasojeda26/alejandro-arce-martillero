@@ -1,5 +1,5 @@
 // Datos Profesionales Oficiales - Martillero Judicial Ángel Alejandro Arce
-const MARTILLERO_INFO = {
+const DEFAULT_MARTILLERO_INFO = {
   name: "Ángel Alejandro Arce",
   title: "Martillero Judicial y Público",
   matriculaSTJ: "Matrícula S.T.J. Ctes. Nº 383",
@@ -15,7 +15,72 @@ const MARTILLERO_INFO = {
   adminPin: "arce383"
 };
 
+let MARTILLERO_INFO = (() => {
+  try {
+    const saved = localStorage.getItem("arce_martillero_info");
+    return saved ? { ...DEFAULT_MARTILLERO_INFO, ...JSON.parse(saved) } : { ...DEFAULT_MARTILLERO_INFO };
+  } catch (e) {
+    return { ...DEFAULT_MARTILLERO_INFO };
+  }
+})();
+
+const DEFAULT_WEB_TEXTS = {
+  announcementActive: true,
+  announcementText: "PRÓXIMO REMATE JUDICIAL: Sede Catamarca Nº 1057 • Salón Colegio de Martilleros. Consultas y edictos vigentes.",
+  announcementLink: "#cronograma",
+  heroTitle1: "Subastas Judiciales, Remates Públicos y Operaciones Inmobiliarias",
+  heroSubtitle1: "Transparencia, rigor procesal y respaldo institucional en remates dispuestos por los Juzgados Civiles, Comerciales y Laborales de la Ciudad de Corrientes.",
+  heroTitle2: "Inmuebles, Rodados y Activos Comerciales en Subasta Pública",
+  heroSubtitle2: "Intervención profesional en ejecuciones hipotecarias, concursos preventivos, quiebras y comercialización directa de propiedades en toda la provincia.",
+  quoteText: "Seguridad jurídica, publicidad transparente y estricto cumplimiento procesal en cada subasta pública y tasación encomendada por los Tribunales de la Provincia de Corrientes.",
+  quoteAuthor: "Ángel Alejandro Arce • Martillero Judicial Matrícula S.T.J. Ctes. Nº 383"
+};
+
+let WEB_TEXTS = (() => {
+  try {
+    const saved = localStorage.getItem("arce_web_texts");
+    return saved ? { ...DEFAULT_WEB_TEXTS, ...JSON.parse(saved) } : { ...DEFAULT_WEB_TEXTS };
+  } catch (e) {
+    return { ...DEFAULT_WEB_TEXTS };
+  }
+})();
+
+const DEFAULT_INBOX_MESSAGES = [
+  {
+    id: 1713291000000,
+    date: "16/10/2026 10:15",
+    type: "Subasta ARCE-101",
+    name: "Dr. Gustavo Romero",
+    phone: "3794889922",
+    email: "g.romero.abogado@gmail.com",
+    message: "Buen día Martillero Arce, represento a un cliente interesado en la subasta del inmueble en calle San Lorenzo. Quisiéramos saber si hay días de exhibición previa antes del remate en Catamarca 1057.",
+    status: "nueva"
+  },
+  {
+    id: 1713280000000,
+    date: "15/10/2026 17:40",
+    type: "Tasación Oficial (Casa)",
+    name: "Lic. Mariana Escalante",
+    phone: "3794123456",
+    email: "mescalante@estudiojuridico.com",
+    message: "Solicito cotización para pericia de tasación judicial en juicio de división de condominio en Corrientes Capital. Es una casa de 4 dormitorios con terreno propio.",
+    status: "respondida"
+  }
+];
+
+let INBOX_MESSAGES = (() => {
+  try {
+    const saved = localStorage.getItem("arce_inbox_messages");
+    return saved ? JSON.parse(saved) : DEFAULT_INBOX_MESSAGES;
+  } catch (e) {
+    return DEFAULT_INBOX_MESSAGES;
+  }
+})();
+
+let ADMIN_PIN = localStorage.getItem("arce_admin_pin") || "arce383";
+
 const STORAGE_KEY = "arce_martillero_listings_v3";
+
 
 // Helper para generar fechas futuras dinámicas para el cronograma en vivo
 function getFutureDateISO(daysAhead, hour = 10, minute = 0) {
@@ -286,6 +351,9 @@ function saveListingsToStorage() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  applyMartilleroInfoToDOM();
+  applyWebTextsToDOM();
+  updateInboxBadges();
   renderListings(LISTINGS_DATA);
   renderUpcomingSchedule();
   setupFilters();
@@ -1030,78 +1098,321 @@ function openContactModal(id) {
   modal.show();
 }
 
-// Formularios
+// ==========================================================
+// FORMULARIOS DE CONTACTO Y TASACIONES (Conexión al Mini-CRM)
+// ==========================================================
 function setupForms() {
+  // 1. Formulario Modal de Publicación
   const modalForm = document.getElementById("propertyContactForm");
   if (modalForm) {
     modalForm.addEventListener("submit", (e) => {
       e.preventDefault();
+      const name = document.getElementById("modalContactName")?.value.trim() || "Interesado Web";
+      const phone = document.getElementById("modalContactPhone")?.value.trim() || "";
+      const email = document.getElementById("modalContactEmail")?.value.trim() || "";
+      const message = document.getElementById("modalContactMessage")?.value.trim() || "";
+      const typeLabel = currentSelectedProperty ? `Aviso ${currentSelectedProperty.slug}` : "Publicación";
+
+      const newMsg = {
+        id: Date.now(),
+        date: new Date().toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" }),
+        type: typeLabel,
+        name,
+        phone,
+        email,
+        message,
+        status: "nueva"
+      };
+
+      INBOX_MESSAGES.unshift(newMsg);
+      saveInboxToStorage();
+      updateInboxBadges();
+      if (isAdminAuthenticated) renderInboxMessages();
+
       document.getElementById("modalContactAlert")?.classList.remove("d-none");
+      showToast(`¡Consulta recibida! Se guardó en la bandeja de entrada.`);
       modalForm.reset();
     });
   }
 
+  // 2. Formulario de Tasaciones
   const tasacionesForm = document.getElementById("tasacionesForm");
   if (tasacionesForm) {
     tasacionesForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const firstName = document.getElementById("tasFirstName").value.trim();
-      const lastName = document.getElementById("tasLastName").value.trim();
-      const phone = document.getElementById("tasPhone").value.trim();
-      const type = document.getElementById("tasType").value;
-      const details = document.getElementById("tasDetails").value.trim();
+      const firstName = document.getElementById("tasFirstName")?.value.trim() || "";
+      const lastName = document.getElementById("tasLastName")?.value.trim() || "";
+      const fullName = `${firstName} ${lastName}`.trim() || "Solicitante Tasación";
+      const phone = document.getElementById("tasPhone")?.value.trim() || "";
+      const email = document.getElementById("tasEmail")?.value.trim() || "";
+      const type = document.getElementById("tasType")?.value || "Inmueble";
+      const details = document.getElementById("tasDetails")?.value.trim() || "";
+
+      const newMsg = {
+        id: Date.now(),
+        date: new Date().toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" }),
+        type: `Tasación (${type})`,
+        name: fullName,
+        phone,
+        email,
+        message: `Tipo de bien: ${type}.\nDetalles del inmueble/bien: ${details}`,
+        status: "nueva"
+      };
+
+      INBOX_MESSAGES.unshift(newMsg);
+      saveInboxToStorage();
+      updateInboxBadges();
+      if (isAdminAuthenticated) renderInboxMessages();
 
       document.getElementById("tasacionesAlert")?.classList.remove("d-none");
-
       const waMsg = encodeURIComponent(
-        `Hola Martillero Ángel Alejandro Arce, solicito una Tasación Profesional.\nNombre: ${firstName} ${lastName}\nTeléfono: ${phone}\nTipo de bien: ${type}\nDetalles: ${details}`
+        `Hola Martillero Ángel Alejandro Arce, solicito una Tasación Profesional.\nNombre: ${fullName}\nTeléfono: ${phone}\nTipo de bien: ${type}\nDetalles: ${details}`
       );
       const waLinkEl = document.getElementById("tasacionesWaFollowup");
       if (waLinkEl) {
         waLinkEl.href = `https://wa.me/${MARTILLERO_INFO.phoneRaw}?text=${waMsg}`;
       }
+
+      showToast(`¡Solicitud de tasación registrada exitosamente!`);
       tasacionesForm.reset();
     });
   }
 
+  // 3. Formulario de Contacto General al Pie
   const mainContactForm = document.getElementById("mainContactForm");
   if (mainContactForm) {
     mainContactForm.addEventListener("submit", (e) => {
       e.preventDefault();
+      const name = document.getElementById("mainContactName")?.value.trim() || "Usuario Web";
+      const phone = document.getElementById("mainContactPhone")?.value.trim() || "";
+      const email = document.getElementById("mainContactEmail")?.value.trim() || "";
+      const message = document.getElementById("mainContactMsg")?.value.trim() || "";
+
+      const newMsg = {
+        id: Date.now(),
+        date: new Date().toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" }),
+        type: "Contacto General Web",
+        name,
+        phone,
+        email,
+        message,
+        status: "nueva"
+      };
+
+      INBOX_MESSAGES.unshift(newMsg);
+      saveInboxToStorage();
+      updateInboxBadges();
+      if (isAdminAuthenticated) renderInboxMessages();
+
       document.getElementById("mainContactAlert")?.classList.remove("d-none");
+      showToast(`¡Mensaje enviado y registrado en la bandeja del Martillero!`);
       mainContactForm.reset();
     });
   }
 }
 
-// Panel de Administración Fácil para el Martillero (PIN: arce383)
+// ==========================================================
+// SINCRONIZACIÓN REACTIVA DE DATOS Y TEXTOS EN EL SITIO
+// ==========================================================
+function applyMartilleroInfoToDOM() {
+  document.querySelectorAll(".dyn-matricula").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.matriculaSTJ;
+  });
+  document.querySelectorAll(".dyn-name").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.name;
+  });
+  document.querySelectorAll(".dyn-title").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.title;
+  });
+  document.querySelectorAll(".dyn-colegio").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.colegio;
+  });
+  document.querySelectorAll(".dyn-address").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.address;
+  });
+  document.querySelectorAll(".dyn-city").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.city;
+  });
+  document.querySelectorAll(".dyn-phone").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.phoneDisplay;
+  });
+  document.querySelectorAll(".dyn-phone-alt").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.phoneAlt;
+  });
+  document.querySelectorAll(".dyn-email").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.email;
+  });
+  document.querySelectorAll(".dyn-schedule").forEach((el) => {
+    el.textContent = MARTILLERO_INFO.schedule;
+  });
+
+  // Enlaces de WhatsApp
+  document.querySelectorAll(".dyn-wa-link").forEach((el) => {
+    const defaultMsg = encodeURIComponent(`Hola Martillero ${MARTILLERO_INFO.name}, le escribo desde su página web.`);
+    el.href = `https://wa.me/${MARTILLERO_INFO.phoneRaw}?text=${defaultMsg}`;
+  });
+
+  // Botón flotante
+  const floatingWa = document.querySelector(".whatsapp-floating-button");
+  if (floatingWa) {
+    floatingWa.href = `https://wa.me/${MARTILLERO_INFO.phoneRaw}?text=${encodeURIComponent(`Hola Martillero ${MARTILLERO_INFO.name}, me comunico desde su sitio web.`)}`;
+    floatingWa.title = `Chatear por WhatsApp con ${MARTILLERO_INFO.name}`;
+  }
+
+  // Teléfonos
+  document.querySelectorAll(".dyn-tel-link").forEach((el) => {
+    el.href = `tel:${MARTILLERO_INFO.phoneRaw}`;
+  });
+
+  // Emails
+  document.querySelectorAll(".dyn-email-link").forEach((el) => {
+    el.href = `mailto:${MARTILLERO_INFO.email}`;
+  });
+
+  // Previsualización de tarjeta en el panel
+  const prevName = document.getElementById("prevCardName");
+  if (prevName) prevName.textContent = MARTILLERO_INFO.name;
+  const prevTitle = document.getElementById("prevCardTitle");
+  if (prevTitle) prevTitle.textContent = MARTILLERO_INFO.title;
+  const prevMat = document.getElementById("prevCardMatricula");
+  if (prevMat) prevMat.textContent = MARTILLERO_INFO.matriculaSTJ;
+  const prevAddr = document.getElementById("prevCardAddress");
+  if (prevAddr) prevAddr.textContent = MARTILLERO_INFO.address;
+  const prevPhone = document.getElementById("prevCardPhone");
+  if (prevPhone) prevPhone.textContent = MARTILLERO_INFO.phoneDisplay;
+  const prevEmail = document.getElementById("prevCardEmail");
+  if (prevEmail) prevEmail.textContent = MARTILLERO_INFO.email;
+  const prevSched = document.getElementById("prevCardSchedule");
+  if (prevSched) prevSched.textContent = MARTILLERO_INFO.schedule;
+
+  // Actualizar mapa Leaflet si existe
+  if (window.officeLeafletMap && window.officeLeafletMarker && Array.isArray(MARTILLERO_INFO.coords)) {
+    window.officeLeafletMap.setView(MARTILLERO_INFO.coords, 16);
+    window.officeLeafletMarker.setLatLng(MARTILLERO_INFO.coords);
+    window.officeLeafletMarker.setPopupContent(
+      `<strong>${MARTILLERO_INFO.name}</strong><br>${MARTILLERO_INFO.title} (${MARTILLERO_INFO.matriculaSTJ})<br>📍 ${MARTILLERO_INFO.address}, ${MARTILLERO_INFO.city}<br><small>${MARTILLERO_INFO.colegio}</small>`
+    );
+  }
+}
+
+function applyWebTextsToDOM() {
+  const bar = document.getElementById("urgentAnnouncementBar");
+  const txt = document.getElementById("urgentAnnouncementText");
+  const link = document.getElementById("urgentAnnouncementLink");
+
+  if (bar && txt) {
+    if (WEB_TEXTS.announcementActive) {
+      bar.classList.remove("d-none");
+      txt.textContent = WEB_TEXTS.announcementText;
+      if (link && WEB_TEXTS.announcementLink) {
+        link.href = WEB_TEXTS.announcementLink;
+      }
+    } else {
+      bar.classList.add("d-none");
+    }
+  }
+
+  const hTitle1 = document.getElementById("dynHeroTitle1");
+  if (hTitle1 && WEB_TEXTS.heroTitle1) hTitle1.textContent = WEB_TEXTS.heroTitle1;
+  const hSub1 = document.getElementById("dynHeroSubtitle1");
+  if (hSub1 && WEB_TEXTS.heroSubtitle1) hSub1.textContent = WEB_TEXTS.heroSubtitle1;
+
+  const hTitle2 = document.getElementById("dynHeroTitle2");
+  if (hTitle2 && WEB_TEXTS.heroTitle2) hTitle2.textContent = WEB_TEXTS.heroTitle2;
+  const hSub2 = document.getElementById("dynHeroSubtitle2");
+  if (hSub2 && WEB_TEXTS.heroSubtitle2) hSub2.textContent = WEB_TEXTS.heroSubtitle2;
+
+  const quoteEl = document.getElementById("dynSpecialQuote");
+  if (quoteEl && WEB_TEXTS.quoteText) quoteEl.textContent = `“${WEB_TEXTS.quoteText.replace(/^[“"']+|[”"']+$/g, "")}”`;
+  const authorEl = document.getElementById("dynSpecialQuoteAuthor");
+  if (authorEl && WEB_TEXTS.quoteAuthor) authorEl.textContent = WEB_TEXTS.quoteAuthor;
+}
+
+function dismissAnnouncement() {
+  const bar = document.getElementById("urgentAnnouncementBar");
+  if (bar) bar.classList.add("d-none");
+}
+
+function saveInboxToStorage() {
+  try {
+    localStorage.setItem("arce_inbox_messages", JSON.stringify(INBOX_MESSAGES));
+  } catch (e) {
+    console.warn("No se pudo guardar la bandeja en storage:", e);
+  }
+}
+
+function updateInboxBadges() {
+  const newCount = INBOX_MESSAGES.filter((m) => m.status === "nueva").length;
+  const totalCount = INBOX_MESSAGES.length;
+
+  const topBadge = document.getElementById("topBarInboxBadge");
+  if (topBadge) {
+    if (newCount > 0) {
+      topBadge.textContent = newCount;
+      topBadge.classList.remove("d-none");
+    } else {
+      topBadge.classList.add("d-none");
+    }
+  }
+
+  const tabBadge = document.getElementById("tabInboxBadge");
+  if (tabBadge) tabBadge.textContent = newCount;
+
+  const kpiInbox = document.getElementById("kpiInboxCount");
+  if (kpiInbox) kpiInbox.textContent = totalCount;
+
+  const fTotal = document.getElementById("inboxFilterTotalCount");
+  if (fTotal) fTotal.textContent = totalCount;
+  const fNew = document.getElementById("inboxFilterNewCount");
+  if (fNew) fNew.textContent = newCount;
+  const fAns = document.getElementById("inboxFilterAnsweredCount");
+  if (fAns) fAns.textContent = INBOX_MESSAGES.filter((m) => m.status === "respondida").length;
+}
+
+// ==========================================================
+// PANEL DE ADMINISTRACIÓN INTEGRAL (5 PESTAÑAS)
+// ==========================================================
 function setupAdminPanel() {
   const loginForm = document.getElementById("adminLoginForm");
   const createForm = document.getElementById("adminItemForm");
+  const profileForm = document.getElementById("adminProfileForm");
+  const textsForm = document.getElementById("adminTextsForm");
 
+  // 1. Manejo del Login con PIN
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const pin = document.getElementById("adminPinInput").value.trim();
       const err = document.getElementById("adminLoginError");
-      if (pin === MARTILLERO_INFO.adminPin) {
+      if (pin === ADMIN_PIN) {
         isAdminAuthenticated = true;
         err.classList.add("d-none");
         document.getElementById("adminLoginView").classList.add("d-none");
         document.getElementById("adminDashboardView").classList.remove("d-none");
+        document.getElementById("adminLogoutBtn")?.classList.remove("d-none");
+
+        // Inicializar datos del dashboard
+        updateAdminKPIs();
         renderAdminTable();
+        populateProfileInputs();
+        populateTextsInputs();
+        renderInboxMessages();
+        updateInboxBadges();
+        updateAdminImagePreviews();
       } else {
         err.classList.remove("d-none");
       }
     });
   }
 
+  // 2. Manejo de Publicaciones (Cargar / Editar)
   if (createForm) {
     createForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const editId = parseInt(document.getElementById("adminEditId").value, 10);
+      const customCode = document.getElementById("admCode").value.trim().toUpperCase().replace("ARCE-", "");
       const nextCodeNum = LISTINGS_DATA.length ? Math.max(...LISTINGS_DATA.map((x) => parseInt(x.code, 10) || 100)) + 1 : 101;
-      const codeStr = editId ? LISTINGS_DATA.find((x) => x.id === editId)?.code || String(nextCodeNum) : String(nextCodeNum);
+      const codeStr = customCode || (editId ? LISTINGS_DATA.find((x) => x.id === editId)?.code || String(nextCodeNum) : String(nextCodeNum));
 
       const currency = document.getElementById("admCurrency").value;
       const priceNum = parseFloat(document.getElementById("admPrice").value) || 0;
@@ -1124,11 +1435,42 @@ function setupAdminPanel() {
         maquinaria: "Maquinarias y Bienes Muebles"
       };
 
-      const imgUrl =
+      const locVal = document.getElementById("admLocation").value;
+      const locLabels = {
+        centro: "Corrientes Capital • Barrio Centro",
+        cambacua: "Corrientes Capital • Camba Cuá / Costanera",
+        libertad: "Corrientes Capital • Barrio Libertad",
+        "3deabril": "Corrientes Capital • Av. 3 de Abril / Ferré",
+        ruta12: "Corrientes Capital • Corredor Ruta 12",
+        santaana: "Gran Corrientes • Santa Ana"
+      };
+
+      const mainImg =
         document.getElementById("admImage").value.trim() ||
         "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80";
 
-      const dateVal = document.getElementById("admAuctionDateISO").value;
+      const extraUrlsRaw = document.getElementById("admExtraImages").value || "";
+      const extraImgs = extraUrlsRaw
+        .split(/[\n,]/)
+        .map((u) => u.trim())
+        .filter((u) => u.length > 5);
+
+      const allImages = [mainImg];
+      extraImgs.forEach((u) => {
+        if (!allImages.includes(u)) allImages.push(u);
+      });
+
+      const dateISO = document.getElementById("admAuctionDateISO").value;
+      const dateCustomText = document.getElementById("admAuctionDateText").value.trim();
+      const dateDisplayText = dateCustomText
+        ? dateCustomText
+        : dateISO
+        ? `Sede ${MARTILLERO_INFO.address} • ${new Date(dateISO).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })} hs.`
+        : "Consultar fecha y horario";
+
+      const senaP = parseFloat(document.getElementById("admSenaPercent").value) || (opVal === "quiebra" ? 30 : 10);
+      const comisionP = parseFloat(document.getElementById("admComisionPercent").value) || (opVal === "quiebra" ? 10 : 3);
+      const selladoP = parseFloat(document.getElementById("admSelladoPercent").value) || 1.2;
 
       const newObj = {
         id: editId || Date.now(),
@@ -1136,9 +1478,9 @@ function setupAdminPanel() {
         slug: `ARCE-${codeStr}`,
         title: document.getElementById("admTitle").value.trim(),
         address: document.getElementById("admAddress").value.trim(),
-        neighborhood: "Corrientes",
-        locationId: document.getElementById("admLocation").value,
-        locationLabel: "Corrientes Capital",
+        neighborhood: "Corrientes Capital",
+        locationId: locVal,
+        locationLabel: locLabels[locVal] || "Corrientes Capital",
         operationId: opVal,
         operationLabel: opLabels[opVal] || "Subasta Judicial",
         typeId: typeVal,
@@ -1147,22 +1489,20 @@ function setupAdminPanel() {
         price: priceNum,
         priceFormatted,
         conditionsSummary: document.getElementById("admConditions").value.trim(),
-        senaPercent: opVal === "quiebra" ? 30 : 10,
-        comisionPercent: opVal === "quiebra" ? 10 : 3,
-        selladoPercent: 1.2,
+        senaPercent: senaP,
+        comisionPercent: comisionP,
+        selladoPercent: selladoP,
         ribbon: opLabels[opVal] || "Destacado",
         ribbonClass: opVal === "venta" ? "ribbon-navy" : opVal === "quiebra" ? "ribbon-gold" : "",
         juzgado: document.getElementById("admJuzgado").value.trim() || "Juzgado Civil y Comercial - Corrientes",
-        expediente: document.getElementById("admExpediente").value.trim() || "Consultar expediente en oficina",
+        expediente: document.getElementById("admExpediente").value.trim() || "Consultar expediente en estudio",
         totalArea: parseFloat(document.getElementById("admArea").value) || 0,
         coveredArea: 0,
         rooms: document.getElementById("admRooms").value.trim() || "Lote Judicial",
-        auctionDate: dateVal
-          ? `Fecha: ${new Date(dateVal).toLocaleString("es-AR")} • Catamarca Nº 1057`
-          : "Consultar fecha y horario",
-        auctionDateISO: dateVal ? new Date(dateVal).toISOString() : null,
-        image: imgUrl,
-        images: [imgUrl],
+        auctionDate: dateDisplayText,
+        auctionDateISO: dateISO ? new Date(dateISO).toISOString() : null,
+        image: mainImg,
+        images: allImages,
         description: document.getElementById("admDescription").value.trim(),
         edicto: document.getElementById("admEdicto").value.trim()
       };
@@ -1170,45 +1510,202 @@ function setupAdminPanel() {
       if (editId) {
         const idx = LISTINGS_DATA.findIndex((x) => x.id === editId);
         if (idx > -1) LISTINGS_DATA[idx] = newObj;
-        showToast(`Publicación ${newObj.slug} actualizada correctamente.`);
+        showToast(`Publicación ${newObj.slug} modificada con éxito.`);
       } else {
         LISTINGS_DATA.unshift(newObj);
-        showToast(`Nueva publicación ${newObj.slug} agregada.`);
+        showToast(`Nueva publicación ${newObj.slug} agregada al catálogo.`);
       }
 
       saveListingsToStorage();
       renderListings(LISTINGS_DATA);
       renderUpcomingSchedule();
       renderAdminTable();
-      createForm.reset();
-      document.getElementById("adminEditId").value = "";
-      document.getElementById("adminFormTitle").textContent = "Cargar Nueva Subasta o Propiedad";
+      updateAdminKPIs();
+      cancelAdminEdit();
     });
+  }
+
+  // 3. Manejo de Datos del Martillero (Pestaña 2)
+  if (profileForm) {
+    profileForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      MARTILLERO_INFO.name = document.getElementById("profName").value.trim();
+      MARTILLERO_INFO.title = document.getElementById("profTitle").value.trim();
+      MARTILLERO_INFO.matriculaSTJ = document.getElementById("profMatricula").value.trim();
+      MARTILLERO_INFO.colegio = document.getElementById("profColegio").value.trim();
+      MARTILLERO_INFO.address = document.getElementById("profAddress").value.trim();
+      MARTILLERO_INFO.city = document.getElementById("profCity").value.trim();
+      MARTILLERO_INFO.phoneDisplay = document.getElementById("profPhoneDisplay").value.trim();
+      MARTILLERO_INFO.phoneRaw = document.getElementById("profPhoneRaw").value.trim().replace(/\D/g, "");
+      MARTILLERO_INFO.phoneAlt = document.getElementById("profPhoneAlt").value.trim();
+      MARTILLERO_INFO.email = document.getElementById("profEmail").value.trim();
+      MARTILLERO_INFO.schedule = document.getElementById("profSchedule").value.trim();
+
+      const lat = parseFloat(document.getElementById("profLat").value);
+      const lng = parseFloat(document.getElementById("profLng").value);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        MARTILLERO_INFO.coords = [lat, lng];
+      }
+
+      localStorage.setItem("arce_martillero_info", JSON.stringify(MARTILLERO_INFO));
+      applyMartilleroInfoToDOM();
+      showToast("¡Datos profesionales actualizados en toda la página web!");
+    });
+
+    // Escuchar cambios en vivo para sincronizar la tarjeta preview del panel
+    [
+      "profName",
+      "profTitle",
+      "profMatricula",
+      "profAddress",
+      "profPhoneDisplay",
+      "profEmail",
+      "profSchedule"
+    ].forEach((id) => {
+      document.getElementById(id)?.addEventListener("input", syncProfileLivePreview);
+    });
+  }
+
+  // 4. Manejo de Textos y Banners (Pestaña 4)
+  if (textsForm) {
+    textsForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      WEB_TEXTS.announcementActive = document.getElementById("textAnnouncementActive").checked;
+      WEB_TEXTS.announcementText = document.getElementById("textAnnouncementText").value.trim();
+      WEB_TEXTS.announcementLink = document.getElementById("textAnnouncementLink").value.trim();
+      WEB_TEXTS.heroTitle1 = document.getElementById("textHeroTitle1").value.trim();
+      WEB_TEXTS.heroSubtitle1 = document.getElementById("textHeroSubtitle1").value.trim();
+      WEB_TEXTS.heroTitle2 = document.getElementById("textHeroTitle2").value.trim();
+      WEB_TEXTS.heroSubtitle2 = document.getElementById("textHeroSubtitle2").value.trim();
+      WEB_TEXTS.quoteText = document.getElementById("textQuote").value.trim();
+      WEB_TEXTS.quoteAuthor = document.getElementById("textQuoteAuthor").value.trim();
+
+      localStorage.setItem("arce_web_texts", JSON.stringify(WEB_TEXTS));
+      applyWebTextsToDOM();
+      showToast("¡Textos institucionales y banners actualizados correctamente!");
+    });
+  }
+
+  // 5. Manejo de Cambio de Clave PIN (Pestaña 5)
+  setupPinChangeForm();
+}
+
+function adminLogout() {
+  isAdminAuthenticated = false;
+  document.getElementById("adminDashboardView")?.classList.add("d-none");
+  document.getElementById("adminLoginView")?.classList.remove("d-none");
+  document.getElementById("adminLogoutBtn")?.classList.add("d-none");
+  document.getElementById("adminLoginForm")?.reset();
+  showToast("Sesión del panel cerrada.");
+}
+
+function togglePinVisibility() {
+  const pinInput = document.getElementById("adminPinInput");
+  const icon = document.getElementById("pinToggleIcon");
+  if (!pinInput || !icon) return;
+
+  if (pinInput.type === "password") {
+    pinInput.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    pinInput.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
   }
 }
 
+function updateAdminKPIs() {
+  const total = LISTINGS_DATA.length;
+  const judicial = LISTINGS_DATA.filter((x) => x.operationId === "subasta" || x.operationId === "quiebra").length;
+  const inbox = INBOX_MESSAGES.length;
+
+  const kpiListings = document.getElementById("kpiListingsCount");
+  if (kpiListings) kpiListings.textContent = total;
+
+  const kpiAuctions = document.getElementById("kpiAuctionsCount");
+  if (kpiAuctions) kpiAuctions.textContent = judicial;
+
+  const kpiInbox = document.getElementById("kpiInboxCount");
+  if (kpiInbox) kpiInbox.textContent = inbox;
+
+  const textCount = document.getElementById("adminListingsCountText");
+  if (textCount) textCount.textContent = total;
+}
+
+// ==========================================================
+// PESTAÑA 1: GESTIÓN DE CATÁLOGO (CRUD Y BÚSQUEDA)
+// ==========================================================
 function renderAdminTable() {
+  filterAdminCatalog();
+}
+
+function filterAdminCatalog() {
+  const search = document.getElementById("adminCatalogSearch")?.value.toLowerCase().trim() || "";
+  const op = document.getElementById("adminCatalogFilterOp")?.value || "all";
+
+  const filtered = LISTINGS_DATA.filter((item) => {
+    const matchOp = op === "all" || item.operationId === op;
+    const matchSearch =
+      !search ||
+      item.title.toLowerCase().includes(search) ||
+      item.slug.toLowerCase().includes(search) ||
+      (item.juzgado && item.juzgado.toLowerCase().includes(search)) ||
+      (item.expediente && item.expediente.toLowerCase().includes(search));
+    return matchOp && matchSearch;
+  });
+
+  renderAdminTableRows(filtered);
+}
+
+function renderAdminTableRows(items) {
   const tbody = document.getElementById("adminItemsTbody");
   if (!tbody) return;
 
-  tbody.innerHTML = LISTINGS_DATA.map(
-    (item) => `
+  if (items.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No se encontraron publicaciones con esos criterios.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = items
+    .map(
+      (item) => `
     <tr>
+      <td>
+        <img src="${item.image}" class="admin-table-thumb" alt="${item.slug}" onerror="this.src='https://placehold.co/100x70?text=Foto'" />
+      </td>
       <td class="fw-bold text-primary">${item.slug}</td>
-      <td>${item.title}<br><small class="text-muted">${item.juzgado}</small></td>
-      <td><span class="badge bg-secondary">${item.operationLabel}</span></td>
-      <td class="fw-semibold">${item.priceFormatted}</td>
+      <td>
+        <strong>${item.title}</strong><br>
+        <small class="text-muted">${item.juzgado || item.address}</small>
+      </td>
+      <td><span class="badge ${item.operationId === "subasta" ? "bg-primary" : item.operationId === "quiebra" ? "bg-warning text-dark" : "bg-secondary"}">${item.operationLabel}</span></td>
+      <td class="fw-bold">${item.priceFormatted}</td>
+      <td><small class="text-secondary">${item.auctionDate || "A convenir"}</small></td>
       <td class="text-end">
-        <button class="btn btn-sm btn-outline-primary me-1" onclick="editAdminItem(${item.id})" title="Editar">
+        <button class="btn btn-sm btn-outline-info me-1 py-0 px-2" onclick="openDetailModal(${item.id})" title="Ver ficha oficial">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-primary me-1 py-0 px-2" onclick="editAdminItem(${item.id})" title="Editar aviso">
           <i class="fa-solid fa-pen"></i>
         </button>
-        <button class="btn btn-sm btn-outline-danger" onclick="deleteAdminItem(${item.id})" title="Eliminar">
+        <button class="btn btn-sm btn-outline-secondary me-1 py-0 px-2" onclick="duplicateAdminItem(${item.id})" title="Duplicar publicación">
+          <i class="fa-solid fa-copy"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteAdminItem(${item.id})" title="Eliminar del catálogo">
           <i class="fa-solid fa-trash"></i>
         </button>
       </td>
     </tr>
   `
-  ).join("");
+    )
+    .join("");
+}
+
+function startNewAdminItem() {
+  cancelAdminEdit();
+  document.getElementById("adminFormCard")?.scrollIntoView({ behavior: "smooth" });
+  document.getElementById("admTitle")?.focus();
 }
 
 function editAdminItem(id) {
@@ -1216,45 +1713,542 @@ function editAdminItem(id) {
   if (!item) return;
 
   document.getElementById("adminEditId").value = item.id;
-  document.getElementById("adminFormTitle").textContent = `Editando Aviso ${item.slug}`;
+  document.getElementById("adminFormTitle").innerHTML = `<i class="fa-solid fa-pen me-1"></i> Editando Publicación <span class="badge bg-primary">${item.slug}</span>`;
   document.getElementById("admTitle").value = item.title;
+  document.getElementById("admCode").value = item.code;
   document.getElementById("admAddress").value = item.address;
   document.getElementById("admOperation").value = item.operationId;
   document.getElementById("admType").value = item.typeId;
   document.getElementById("admLocation").value = item.locationId;
   document.getElementById("admCurrency").value = item.currency;
   document.getElementById("admPrice").value = item.price;
+  document.getElementById("admSenaPercent").value = item.senaPercent || 10;
+  document.getElementById("admComisionPercent").value = item.comisionPercent || 3;
+  document.getElementById("admSelladoPercent").value = item.selladoPercent || 1.2;
   document.getElementById("admConditions").value = item.conditionsSummary;
-  document.getElementById("admJuzgado").value = item.juzgado;
-  document.getElementById("admExpediente").value = item.expediente;
+  document.getElementById("admJuzgado").value = item.juzgado || "";
+  document.getElementById("admExpediente").value = item.expediente || "";
   document.getElementById("admArea").value = item.totalArea || "";
   document.getElementById("admRooms").value = item.rooms || "";
+  document.getElementById("admAuctionDateText").value = item.auctionDate || "";
+
+  if (item.auctionDateISO) {
+    try {
+      const d = new Date(item.auctionDateISO);
+      const isoLocal = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      document.getElementById("admAuctionDateISO").value = isoLocal;
+    } catch (e) {
+      document.getElementById("admAuctionDateISO").value = "";
+    }
+  } else {
+    document.getElementById("admAuctionDateISO").value = "";
+  }
+
   document.getElementById("admImage").value = item.image || "";
+  const extraImages = (item.images || []).filter((u) => u !== item.image);
+  document.getElementById("admExtraImages").value = extraImages.join("\n");
+
   document.getElementById("admDescription").value = item.description || "";
   document.getElementById("admEdicto").value = item.edicto || "";
+
+  updateAdminImagePreviews();
+  document.getElementById("adminFormCard")?.scrollIntoView({ behavior: "smooth" });
+}
+
+function cancelAdminEdit() {
+  document.getElementById("adminEditId").value = "";
+  document.getElementById("adminFormTitle").innerHTML = `<i class="fa-solid fa-pen-to-square me-1"></i> Cargar Nueva Subasta o Propiedad`;
+  document.getElementById("adminItemForm")?.reset();
+  document.getElementById("admCode").value = "";
+  document.getElementById("admExtraImages").value = "";
+  updateAdminImagePreviews();
+}
+
+function duplicateAdminItem(id) {
+  const item = LISTINGS_DATA.find((x) => x.id === id);
+  if (!item) return;
+
+  const nextCodeNum = LISTINGS_DATA.length ? Math.max(...LISTINGS_DATA.map((x) => parseInt(x.code, 10) || 100)) + 1 : 101;
+  const clone = JSON.parse(JSON.stringify(item));
+  clone.id = Date.now();
+  clone.code = String(nextCodeNum);
+  clone.slug = `ARCE-${nextCodeNum}`;
+  clone.title = `[COPIA] ${clone.title}`;
+
+  LISTINGS_DATA.unshift(clone);
+  saveListingsToStorage();
+  renderListings(LISTINGS_DATA);
+  renderUpcomingSchedule();
+  renderAdminTable();
+  updateAdminKPIs();
+  showToast(`Publicación duplicada como ${clone.slug}.`);
 }
 
 function deleteAdminItem(id) {
-  if (!confirm("¿Está seguro de eliminar esta publicación del catálogo?")) return;
+  const item = LISTINGS_DATA.find((x) => x.id === id);
+  const slug = item ? item.slug : "";
+  if (!confirm(`¿Está seguro de eliminar la publicación ${slug} del portal?`)) return;
+
   LISTINGS_DATA = LISTINGS_DATA.filter((x) => x.id !== id);
   saveListingsToStorage();
   renderListings(LISTINGS_DATA);
   renderUpcomingSchedule();
   renderAdminTable();
-  showToast("Publicación eliminada.");
+  updateAdminKPIs();
+  showToast(`Publicación ${slug} eliminada del portal.`);
 }
 
 function resetDefaultCatalog() {
-  if (!confirm("¿Restaurar las 6 publicaciones originales de demostración?")) return;
+  if (!confirm("¿Restaurar las 6 publicaciones originales de demostración en Catamarca Nº 1057?")) return;
   localStorage.removeItem(STORAGE_KEY);
   LISTINGS_DATA = JSON.parse(JSON.stringify(DEFAULT_LISTINGS_DATA));
   renderListings(LISTINGS_DATA);
   renderUpcomingSchedule();
   renderAdminTable();
-  showToast("Catálogo original restaurado.");
+  updateAdminKPIs();
+  showToast("Catálogo original de demostración restaurado.");
 }
 
-// Notificación Toast
+function updateAdminImagePreviews() {
+  const previewBox = document.getElementById("adminGalleryPreview");
+  if (!previewBox) return;
+
+  const mainUrl = document.getElementById("admImage")?.value.trim();
+  const extraUrlsRaw = document.getElementById("admExtraImages")?.value || "";
+  const extraUrls = extraUrlsRaw
+    .split(/[\n,]/)
+    .map((u) => u.trim())
+    .filter((u) => u.length > 5);
+
+  const allUrls = [];
+  if (mainUrl) allUrls.push(mainUrl);
+  extraUrls.forEach((u) => {
+    if (!allUrls.includes(u)) allUrls.push(u);
+  });
+
+  if (allUrls.length === 0) {
+    previewBox.innerHTML = `<small class="text-muted">Ingrese una URL de foto para ver la miniatura aquí.</small>`;
+    return;
+  }
+
+  previewBox.innerHTML = allUrls
+    .map(
+      (u, i) => `
+    <div class="position-relative d-inline-block">
+      <img src="${u}" class="admin-img-preview-thumb" alt="Preview ${i + 1}" onerror="this.src='https://placehold.co/100x70?text=Error'" />
+      ${i === 0 ? `<span class="badge bg-primary position-absolute bottom-0 start-0 m-1" style="font-size: 8px;">Principal</span>` : ""}
+    </div>
+  `
+    )
+    .join("");
+}
+
+// ==========================================================
+// PESTAÑA 2: GESTIÓN DE PERFIL DEL MARTILLERO
+// ==========================================================
+function populateProfileInputs() {
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || "";
+  };
+
+  setVal("profName", MARTILLERO_INFO.name);
+  setVal("profTitle", MARTILLERO_INFO.title);
+  setVal("profMatricula", MARTILLERO_INFO.matriculaSTJ);
+  setVal("profColegio", MARTILLERO_INFO.colegio);
+  setVal("profAddress", MARTILLERO_INFO.address);
+  setVal("profCity", MARTILLERO_INFO.city);
+  setVal("profPhoneDisplay", MARTILLERO_INFO.phoneDisplay);
+  setVal("profPhoneRaw", MARTILLERO_INFO.phoneRaw);
+  setVal("profPhoneAlt", MARTILLERO_INFO.phoneAlt);
+  setVal("profEmail", MARTILLERO_INFO.email);
+  setVal("profSchedule", MARTILLERO_INFO.schedule);
+
+  if (Array.isArray(MARTILLERO_INFO.coords)) {
+    setVal("profLat", MARTILLERO_INFO.coords[0]);
+    setVal("profLng", MARTILLERO_INFO.coords[1]);
+  }
+
+  syncProfileLivePreview();
+}
+
+function syncProfileLivePreview() {
+  const getVal = (id, fallback) => document.getElementById(id)?.value.trim() || fallback;
+  const setTxt = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setTxt("prevCardName", getVal("profName", MARTILLERO_INFO.name));
+  setTxt("prevCardTitle", getVal("profTitle", MARTILLERO_INFO.title));
+  setTxt("prevCardMatricula", getVal("profMatricula", MARTILLERO_INFO.matriculaSTJ));
+  setTxt("prevCardAddress", getVal("profAddress", MARTILLERO_INFO.address));
+  setTxt("prevCardPhone", getVal("profPhoneDisplay", MARTILLERO_INFO.phoneDisplay));
+  setTxt("prevCardEmail", getVal("profEmail", MARTILLERO_INFO.email));
+  setTxt("prevCardSchedule", getVal("profSchedule", MARTILLERO_INFO.schedule));
+}
+
+// ==========================================================
+// PESTAÑA 3: BANDEJA DE ENTRADA (MINI-CRM)
+// ==========================================================
+let activeInboxFilter = "all";
+
+function setInboxFilter(filter) {
+  activeInboxFilter = filter;
+  ["btnFilterAllInbox", "btnFilterNewInbox", "btnFilterAnsweredInbox"].forEach((id) => {
+    document.getElementById(id)?.classList.remove("active");
+  });
+  if (filter === "all") document.getElementById("btnFilterAllInbox")?.classList.add("active");
+  if (filter === "nueva") document.getElementById("btnFilterNewInbox")?.classList.add("active");
+  if (filter === "respondida") document.getElementById("btnFilterAnsweredInbox")?.classList.add("active");
+  renderInboxMessages();
+}
+
+function renderInboxMessages() {
+  const container = document.getElementById("adminInboxContainer");
+  if (!container) return;
+
+  const searchVal = document.getElementById("searchInboxInput")?.value.toLowerCase().trim() || "";
+
+  const filtered = INBOX_MESSAGES.filter((m) => {
+    const matchFilter =
+      activeInboxFilter === "all" ||
+      (activeInboxFilter === "nueva" && m.status === "nueva") ||
+      (activeInboxFilter === "respondida" && m.status === "respondida");
+
+    const matchSearch =
+      !searchVal ||
+      (m.name && m.name.toLowerCase().includes(searchVal)) ||
+      (m.phone && m.phone.toLowerCase().includes(searchVal)) ||
+      (m.email && m.email.toLowerCase().includes(searchVal)) ||
+      (m.message && m.message.toLowerCase().includes(searchVal)) ||
+      (m.type && m.type.toLowerCase().includes(searchVal));
+
+    return matchFilter && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-5 bg-white rounded-3 border">
+        <i class="fa-regular fa-folder-open fa-2x text-muted mb-2"></i>
+        <p class="text-muted small mb-0">No se encontraron consultas para este criterio de búsqueda.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered
+    .map((m) => {
+      const isNew = m.status === "nueva";
+      const statusBadge = isNew
+        ? `<span class="badge bg-success-subtle text-success border border-success-subtle"><i class="fa-solid fa-bell me-1"></i>Nueva Consulta</span>`
+        : `<span class="badge bg-info-subtle text-primary border border-info-subtle"><i class="fa-solid fa-check-double me-1"></i>Respondida</span>`;
+
+      const cleanPhone = (m.phone || "").replace(/\D/g, "");
+      const waPhone = cleanPhone.startsWith("54")
+        ? cleanPhone
+        : cleanPhone.startsWith("9")
+        ? `54${cleanPhone}`
+        : `549${cleanPhone}`;
+
+      const waReplyText = encodeURIComponent(
+        `Hola ${m.name}, soy el Martillero Judicial Ángel Alejandro Arce. Me pongo en contacto respecto a su consulta sobre "${m.type}". ¿En qué puedo asesorarle?`
+      );
+
+      return `
+      <div class="inbox-item-card ${isNew ? "is-new" : "is-answered"}">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+          <div class="d-flex align-items-center gap-2">
+            ${statusBadge}
+            <span class="badge bg-secondary-subtle text-dark border">${m.type}</span>
+            <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>${m.date}</small>
+          </div>
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary py-0 px-2" style="font-size: 11px;" onclick="toggleInboxStatus(${m.id})" title="${isNew ? "Marcar Respondida" : "Marcar Nueva"}">
+              <i class="fa-solid fa-arrow-rotate-right me-1"></i>${isNew ? "Marcar Respondida" : "Marcar Nueva"}
+            </button>
+            <button class="btn btn-outline-danger py-0 px-2" style="font-size: 11px;" onclick="deleteInboxMessage(${m.id})" title="Eliminar mensaje">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="small fw-bold text-dark"><i class="fa-solid fa-user me-1 text-primary"></i>${m.name}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="small text-muted"><i class="fa-solid fa-phone me-1 text-success"></i>${m.phone}</div>
+          </div>
+          <div class="col-md-4">
+            <div class="small text-muted"><i class="fa-regular fa-envelope me-1 text-info"></i>${m.email || "No informado"}</div>
+          </div>
+        </div>
+
+        <div class="p-2 rounded bg-white border small text-dark mb-3">
+          ${m.message.replace(/\n/g, "<br>")}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+          <a href="https://wa.me/${waPhone}?text=${waReplyText}" target="_blank" class="btn btn-sm btn-success fw-semibold" onclick="markAnswered(${m.id})">
+            <i class="fa-brands fa-whatsapp me-1"></i> Responder por WhatsApp
+          </a>
+          ${m.phone ? `<a href="tel:${cleanPhone}" class="btn btn-sm btn-outline-primary fw-semibold"><i class="fa-solid fa-phone me-1"></i> Llamar</a>` : ""}
+          ${m.email ? `<a href="mailto:${m.email}?subject=Respuesta%20Martillero%20Alejandro%20Arce" class="btn btn-sm btn-outline-secondary fw-semibold"><i class="fa-regular fa-envelope me-1"></i> Enviar Email</a>` : ""}
+        </div>
+      </div>
+    `;
+    })
+    .join("");
+}
+
+function markAnswered(id) {
+  const item = INBOX_MESSAGES.find((x) => x.id === id);
+  if (item) {
+    item.status = "respondida";
+    saveInboxToStorage();
+    updateInboxBadges();
+    renderInboxMessages();
+  }
+}
+
+function toggleInboxStatus(id) {
+  const item = INBOX_MESSAGES.find((x) => x.id === id);
+  if (item) {
+    item.status = item.status === "nueva" ? "respondida" : "nueva";
+    saveInboxToStorage();
+    updateInboxBadges();
+    renderInboxMessages();
+    showToast(`Estado de la consulta actualizado a: ${item.status}.`);
+  }
+}
+
+function deleteInboxMessage(id) {
+  if (!confirm("¿Eliminar este mensaje de la bandeja de entrada?")) return;
+  INBOX_MESSAGES = INBOX_MESSAGES.filter((x) => x.id !== id);
+  saveInboxToStorage();
+  updateInboxBadges();
+  renderInboxMessages();
+  showToast("Consulta eliminada.");
+}
+
+function clearAllInbox() {
+  if (!confirm("¿Está seguro de vaciar todos los mensajes de la bandeja de entrada?")) return;
+  INBOX_MESSAGES = [];
+  saveInboxToStorage();
+  updateInboxBadges();
+  renderInboxMessages();
+  showToast("Bandeja de entrada vaciada.");
+}
+
+function exportInboxCSV() {
+  if (!INBOX_MESSAGES.length) {
+    showToast("No hay consultas registradas para exportar.");
+    return;
+  }
+  let csv = "\uFEFFFecha,Tipo,Nombre,Telefono,Email,Estado,Mensaje\n";
+  INBOX_MESSAGES.forEach((m) => {
+    const cleanMsg = `"${(m.message || "").replace(/"/g, '""')}"`;
+    csv += `"${m.date}","${m.type}","${m.name}","${m.phone}","${m.email}","${m.status}",${cleanMsg}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `consultas_martillero_arce_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Archivo Excel/CSV descargado correctamente.");
+}
+
+// ==========================================================
+// PESTAÑA 4: GESTIÓN DE TEXTOS Y BANNERS
+// ==========================================================
+function populateTextsInputs() {
+  const chk = document.getElementById("textAnnouncementActive");
+  if (chk) chk.checked = !!WEB_TEXTS.announcementActive;
+
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || "";
+  };
+
+  setVal("textAnnouncementText", WEB_TEXTS.announcementText);
+  setVal("textAnnouncementLink", WEB_TEXTS.announcementLink);
+  setVal("textHeroTitle1", WEB_TEXTS.heroTitle1);
+  setVal("textHeroSubtitle1", WEB_TEXTS.heroSubtitle1);
+  setVal("textHeroTitle2", WEB_TEXTS.heroTitle2);
+  setVal("textHeroSubtitle2", WEB_TEXTS.heroSubtitle2);
+  setVal("textQuote", WEB_TEXTS.quoteText);
+  setVal("textQuoteAuthor", WEB_TEXTS.quoteAuthor);
+}
+
+// ==========================================================
+// PESTAÑA 5: SEGURIDAD, BACKUP Y RESTABLECIMIENTO
+// ==========================================================
+function setupPinChangeForm() {
+  const form = document.getElementById("adminPinChangeForm");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const cur = document.getElementById("secCurrentPin").value.trim();
+    const newP = document.getElementById("secNewPin").value.trim();
+    const conf = document.getElementById("secConfirmPin").value.trim();
+    const err = document.getElementById("secPinError");
+
+    if (cur !== ADMIN_PIN) {
+      err.textContent = "La clave actual no es correcta.";
+      err.classList.remove("d-none");
+      return;
+    }
+    if (newP.length < 4) {
+      err.textContent = "La nueva clave debe tener al menos 4 caracteres.";
+      err.classList.remove("d-none");
+      return;
+    }
+    if (newP !== conf) {
+      err.textContent = "Las contraseñas no coinciden.";
+      err.classList.remove("d-none");
+      return;
+    }
+
+    ADMIN_PIN = newP;
+    localStorage.setItem("arce_admin_pin", newP);
+    err.classList.add("d-none");
+    form.reset();
+    showToast(`Clave de acceso actualizada exitosamente a: "${newP}"`);
+  });
+}
+
+function exportBackupJSON() {
+  const fullBackup = {
+    exportedAt: new Date().toISOString(),
+    system: "Portal Martillero Judicial Ángel Alejandro Arce",
+    version: "3.5",
+    martillero: MARTILLERO_INFO,
+    listings: LISTINGS_DATA,
+    inbox: INBOX_MESSAGES,
+    webTexts: WEB_TEXTS,
+    adminPin: ADMIN_PIN
+  };
+
+  const jsonStr = JSON.stringify(fullBackup, null, 2);
+  const blob = new Blob([jsonStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `copia_seguridad_martillero_arce_${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Copia de seguridad completa (JSON) descargada con éxito.");
+}
+
+function importBackupJSON() {
+  const fileInput = document.getElementById("secImportFile");
+  if (!fileInput || !fileInput.files.length) {
+    alert("Por favor seleccione un archivo .json de copia de seguridad primero.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || (!data.listings && !data.martillero)) {
+        throw new Error("El archivo no tiene el formato de copia de seguridad válido.");
+      }
+
+      if (data.martillero) {
+        MARTILLERO_INFO = { ...DEFAULT_MARTILLERO_INFO, ...data.martillero };
+        localStorage.setItem("arce_martillero_info", JSON.stringify(MARTILLERO_INFO));
+      }
+
+      if (Array.isArray(data.listings)) {
+        LISTINGS_DATA = data.listings;
+        saveListingsToStorage();
+      }
+
+      if (Array.isArray(data.inbox)) {
+        INBOX_MESSAGES = data.inbox;
+        saveInboxToStorage();
+      }
+
+      if (data.webTexts) {
+        WEB_TEXTS = { ...DEFAULT_WEB_TEXTS, ...data.webTexts };
+        localStorage.setItem("arce_web_texts", JSON.stringify(WEB_TEXTS));
+      }
+
+      if (data.adminPin) {
+        ADMIN_PIN = data.adminPin;
+        localStorage.setItem("arce_admin_pin", ADMIN_PIN);
+      }
+
+      applyMartilleroInfoToDOM();
+      applyWebTextsToDOM();
+      updateInboxBadges();
+      renderListings(LISTINGS_DATA);
+      renderUpcomingSchedule();
+      renderAdminTable();
+      renderInboxMessages();
+      populateProfileInputs();
+      populateTextsInputs();
+      updateAdminKPIs();
+
+      fileInput.value = "";
+      showToast("¡Copia de seguridad restaurada exitosamente!");
+    } catch (err) {
+      alert("Error al restaurar: " + err.message);
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+function factoryResetAll() {
+  if (
+    !confirm(
+      "¿Está seguro de restablecer TODO a los valores de fábrica?\n\nSe restablecerán las 6 propiedades originales, los datos oficiales del Martillero Arce (Catamarca Nº 1057), la clave arce383 y los textos institucionales."
+    )
+  )
+    return;
+
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem("arce_martillero_info");
+  localStorage.removeItem("arce_inbox_messages");
+  localStorage.removeItem("arce_web_texts");
+  localStorage.removeItem("arce_admin_pin");
+
+  MARTILLERO_INFO = { ...DEFAULT_MARTILLERO_INFO };
+  LISTINGS_DATA = JSON.parse(JSON.stringify(DEFAULT_LISTINGS_DATA));
+  INBOX_MESSAGES = JSON.parse(JSON.stringify(DEFAULT_INBOX_MESSAGES));
+  WEB_TEXTS = { ...DEFAULT_WEB_TEXTS };
+  ADMIN_PIN = "arce383";
+
+  applyMartilleroInfoToDOM();
+  applyWebTextsToDOM();
+  updateInboxBadges();
+  renderListings(LISTINGS_DATA);
+  renderUpcomingSchedule();
+  renderAdminTable();
+  renderInboxMessages();
+  populateProfileInputs();
+  populateTextsInputs();
+  updateAdminKPIs();
+
+  showToast("Valores de fábrica restablecidos correctamente.");
+}
+
+// ==========================================================
+// NOTIFICACIONES TOAST Y MAPA INTERACTIVO LEAFLET
+// ==========================================================
 function showToast(message) {
   const container = document.getElementById("toastContainer");
   if (!container) return;
@@ -1266,24 +2260,24 @@ function showToast(message) {
 
   setTimeout(() => {
     toastEl.remove();
-  }, 3200);
+  }, 3400);
 }
 
-// Mapa Interactivo Leaflet
 function initOfficeMap() {
   const mapEl = document.getElementById("officeMap");
   if (!mapEl || typeof L === "undefined") return;
 
-  const map = L.map("officeMap").setView(MARTILLERO_INFO.coords, 16);
+  window.officeLeafletMap = L.map("officeMap").setView(MARTILLERO_INFO.coords, 16);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+  }).addTo(window.officeLeafletMap);
 
-  const marker = L.marker(MARTILLERO_INFO.coords).addTo(map);
-  marker
+  window.officeLeafletMarker = L.marker(MARTILLERO_INFO.coords).addTo(window.officeLeafletMap);
+  window.officeLeafletMarker
     .bindPopup(
-      `<strong>Ángel Alejandro Arce</strong><br>Martillero Judicial (Mat. S.T.J. Nº 383)<br>📍 Catamarca Nº 1057, Corrientes Capital<br><small>Sede Colegio Público de Martilleros y Corredores</small>`
+      `<strong>${MARTILLERO_INFO.name}</strong><br>${MARTILLERO_INFO.title} (${MARTILLERO_INFO.matriculaSTJ})<br>📍 ${MARTILLERO_INFO.address}, ${MARTILLERO_INFO.city}<br><small>${MARTILLERO_INFO.colegio}</small>`
     )
     .openPopup();
 }
+
